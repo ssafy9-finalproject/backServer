@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.edu.member.model.dao.MemberMapper">
+
+	<resultMap type="memberDto" id="member">
+		<result column="member_id" property="memberId"/>
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="nickname" property="nickname"/>
+		<result column="password" property="password"/>
+		<result column="phone_number" property="phoneNumber"/>
+		<result column="member_role" property="memberRole"/>
+		<result column="status" property="status"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="modified_at" property="modifiedAt"/>
+	</resultMap>
+	
+	<select id="login" parameterType="memberDto" resultMap="member">
+			select member_id,nickname,email_id,email_domain
+			from members
+			where member_id=#{memberId} and password=#{password} 
+			and status='Y'
+	</select>
+	
+	<!-- status는 default:y -->
+	<insert id="join" parameterType="memberDto">
+			insert into members
+			(member_id,email_id,email_domain,nickname,
+			password,phone_number,created_at)
+			values (#{memberId},#{emailId},#{emailDomain},#{nickname},
+			#{password},#{phoneNumber},now())
+	</insert>
+	
+	<!-- admin -->
+	<select id="memberlist" resultMap="member">
+		select  member_id, email_id, email_domain, nickname,
+		 password, phone_number,member_role,created_at,modified_at
+		from members
+		where status='Y'
+		order by created_at
+	</select>
+	
+	<select id="memberDetail" parameterType="memberDto" resultMap="member">
+		select member_id, email_id, email_domain, nickname,
+		 password, phone_number,member_role,created_at,modified_at
+		from members
+		where member_id= #{memberId} and status='Y'
+	</select>
+	
+	<update id="memberDelete" parameterType="String">
+		update members 
+	 	set status='N'
+	 	where member_id = #{memberId}
+	</update>
+	
+	<!-- 파라미터 memberId -->
+	<update id="memberUpdate" parameterType="memberDto">
+		update members 
+	 	set email_id = #{emailId},
+	 	email_domain=#{emailDomain},
+	 	nickname=#{nickname},
+	 	password=#{password},
+	 	phone_number=#{phoneNumber},
+	 	modified_at=now()
+		where member_id=#{memberId} and status='Y'
+	</update>
+	
+	<select id="findById" parameterType="String" resultType="String">
+		select password
+		from members 
+		where member_id=#{memberId}
+		and status='Y'
+	</select>
+
+	<select id="loginMember" parameterType="memberDto" resultMap="member">
+		select member_id, nickname
+		from members
+		where member_id = #{memberId} and password = #{password}
+		and status='Y'
+	</select>
+</mapper>
