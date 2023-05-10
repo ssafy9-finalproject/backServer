@@ -9,9 +9,13 @@
 		select plan_id, member_id, title, start_date, end_date, contents
 		from
 		plan
-		where member_id = #{id}
+		where member_id = #{id} and status = 'Y'
 	</select>
-
 	
+	<!-- select p.plan_id, member_id, title, start_date, end_date, contents, plan_attraction_id, content_id, plan_date
+from plan p
+inner join plan_attraction a on p.plan_id = a.plan_id
+where p.plan_id = 30
+order by plan_attraction_id ASC, plan_date ASC; -->
 
 </mapper>
