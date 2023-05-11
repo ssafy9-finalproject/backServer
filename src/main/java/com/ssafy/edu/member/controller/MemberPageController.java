@@ -28,38 +28,7 @@ public class MemberPageController {
 		this.memberService = memberService;
 	}
 	
-	// 회원가입
-	@PostMapping("/join")
-	public String join(MemberDto mdto) throws Exception {
-		memberService.join(mdto);
-		return "redirect:/";
-	}
 	
-	// 로그인
-	@PostMapping("/login")
-	public String login(MemberDto mdto, HttpSession session) throws Exception {
-		logger.debug("write login : {}", mdto);
-		MemberDto login = memberService.login(mdto);
-		if (login != null) { // 로그인 성공시
-			session.setAttribute("login", login);
-		}
-		else {
-			session.invalidate();
-		}
-		return "redirect:/";
-	}
-
-	@GetMapping("/join")
-	public String join() {
-		return "member/registry";
-	}
-	
-	
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
-	}
 	
 	// 세부정보 화면전환
 	@GetMapping("/memberdetail/{memberId}")
