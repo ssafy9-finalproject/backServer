@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
+import com.ssafy.edu.util.MessageDto;
 
 // 화면이동 컨트롤러. 차근차근 없애기
 @Controller
@@ -88,9 +89,10 @@ public class MemberController {
 	public ResponseEntity<?> memberDelete(@PathVariable("memberId") String memberId) {
 		try {
 			memberService.memberDelete(memberId);
-			List<MemberDto> list = memberService.memberlist();
-			if (list != null && !list.isEmpty()) {
-				return new ResponseEntity<List<MemberDto>>(list,HttpStatus.OK);				
+			MemberDto dto = memberService.memberDetail(memberId);
+			if (dto == null) { // 성공
+				//MessageDto message = new MessageDto(1);
+				return new ResponseEntity<MemberDto>(list,HttpStatus.OK);				
 			}
 			else { // 정보가 없을때 지울경우
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
