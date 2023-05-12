@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
 
+// 화면이동 컨트롤러. 차근차근 없애기
 @Controller
-@RequestMapping(value="/member")
 @CrossOrigin("*")
 public class MemberController {
 	
@@ -41,15 +41,15 @@ public class MemberController {
 		this.memberService = memberService; 
 	}
 		
-	 
+	// 회원 리스트 조회
 	@GetMapping("/memberlist")
 	@ResponseBody
 	public List<MemberDto> memberlist() throws Exception {
 		return memberService.memberlist();
 	}
 	
-	//
-	@GetMapping("/memberdetailmf/{memberId}")
+	// 회원 상세
+	@GetMapping("/memberdetail/{memberId}")
 	@ResponseBody
 	public MemberDto memberdetail(@PathVariable("memberId") String memberId) throws Exception {
 		return memberService.memberDetail(memberId);	

@@ -36,11 +36,6 @@ public class MemberPageController {
 		return "member/memberdetail";
 	}
 	
-	@GetMapping("/memberlistmf")
-	public String memberlist() throws Exception {
-		logger.debug("memberModify memberlist : {}");
-		return "member/memberlist";
-	} 
 	
 	// 업데이트 창 이동
 	@GetMapping("/memberupdate/{memberId}")
