@@ -40,7 +40,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void memberDelete(String memberId) throws Exception {
-		System.out.println(memberId);
 		memberMapper.memberDelete(memberId);
 	}
 

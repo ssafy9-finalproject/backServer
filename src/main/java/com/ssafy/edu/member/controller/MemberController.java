@@ -56,22 +56,48 @@ public class MemberController {
 	}
 	
 	
-	
-	@PostMapping("/memberupdateaf")
-	public String memberUpdateaf(@RequestBody MemberDto memberDto) throws Exception {
-		logger.debug("memberModify memberDto : {}", memberDto);
-		memberService.memberUpdate(memberDto);
-		return "redirect:/member/memberlistmf";
+	// 회원 수정
+	@PutMapping("/memberupdate")
+	public ResponseEntity<?> memberupdate(@RequestBody MemberDto memberDto){
+		try {
+			memberService.memberUpdate(memberDto);
+			MemberDto dto = memberService.memberDetail(memberDto.getMemberId());
+			if (dto != null) { // 업데이트된 dto리턴
+				return new ResponseEntity<MemberDto> (dto,HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
 	}
+//	public void memberUpdate(@RequestBody MemberDto memberDto) throws Exception {
+//		memberService.memberUpdate(memberDto);
+//	}
+	
+//	// 삭제 api
+//	@DeleteMapping("/memberDelete/{memberId}")
+//	public void memberDelete(@PathVariable("memberId") String memberId) throws Exception {
+//		memberService.memberDelete(memberId);
+//	}
 	
 	
 	
 	// 삭제 api
-	@PostMapping("/memberDelete/{memberId}")
-	public String memberDelete(@PathVariable("memberId") String memberId) throws Exception {
-		logger.debug("userDelete userid : {}", memberId);
-		memberService.memberDelete(memberId);
-		return "redirect:/member/memberlistmf";
+	@DeleteMapping("/memberDelete/{memberId}")
+	public ResponseEntity<?> memberDelete(@PathVariable("memberId") String memberId) {
+		try {
+			memberService.memberDelete(memberId);
+			List<MemberDto> list = memberService.memberlist();
+			if (list != null && !list.isEmpty()) {
+				return new ResponseEntity<List<MemberDto>>(list,HttpStatus.OK);				
+			}
+			else { // 정보가 없을때 지울경우
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 		
 

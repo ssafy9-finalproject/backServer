@@ -30,20 +30,6 @@ public class MemberPageController {
 	
 	
 	
-	// 세부정보 화면전환
-	@GetMapping("/memberdetail/{memberId}")
-	public String memberdetail2(@PathVariable String memberId) {
-		return "member/memberdetail";
-	}
-	
-	
-	// 업데이트 창 이동
-	@GetMapping("/memberupdate/{memberId}")
-	public String memberupdate(@PathVariable("memberId") String memberId) throws Exception {
-		return "member/memberupdate";
-	}
-	
-	
 	// 비밀번호 찾기 창 이동
 	@GetMapping("/findById")
 	public String findByPassword() {
