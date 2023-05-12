@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
+import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,9 @@ public class ReviewController {
 	public List<MyPlanResponseDto> planList(@PathVariable String id) {
 		id = "admin";
 		return reviewService.planList(id);
+	}
+	@GetMapping("/review/myplan/{pid}")
+	public MyPlanReviewResponseDto myPlanReview(@PathVariable String pid) {
+		return reviewService.myPlanReview(pid);
 	}
 }

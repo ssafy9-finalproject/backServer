@@ -6,17 +6,23 @@
 
 	<select id="planList" parameterType="String"
 		resultType="myPlanResponseDto">
-		select plan_id, member_id, title, start_date, end_date, contents
+		select plan_id, member_id, title, start_date, end_date,
+		contents
 		from
 		plan
 		where member_id = #{id} and status = 'Y'
 	</select>
-	
-	<!-- select p.plan_id, p.member_id, p.title, p.start_date, p.end_date, p.contents, a.plan_attraction_id, a.content_id, plan_date, i.title, i.content_type_id
-from plan p
-join plan_attraction a on p.plan_id = a.plan_id
-join attraction_info i on a.content_id = i.content_id
-where p.plan_id = 1
-order by plan_attraction_id ASC, plan_date ASC; -->
+
+	<select id="myPlanReview" parameterType="String"
+		resultType="myPlanReviewResponseEntity">
+		select p.plan_id, p.member_id, p.title, p.start_date,
+		p.end_date, p.contents, a.content_id, plan_date, i.title as
+		attraction_title, i.content_type_id
+		from plan p
+		join plan_attraction a on p.plan_id = a.plan_id
+		join attraction_info i on a.content_id = i.content_id
+		where p.plan_id = #{pid}
+		order by plan_attraction_id ASC, plan_date ASC;
+	</select>
 
 </mapper>
