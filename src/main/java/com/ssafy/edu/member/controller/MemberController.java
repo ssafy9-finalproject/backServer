@@ -28,74 +28,89 @@ import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
 import com.ssafy.edu.util.MessageDto;
 
+import lombok.RequiredArgsConstructor;
+
 // 화면이동 컨트롤러. 차근차근 없애기
-@Controller
+@RestController
+@RequiredArgsConstructor // MemberService를 한번 생성하고 바꿀필요없으므로 final, RequiredArgsConstructor사용
 @CrossOrigin("*")
 public class MemberController {
 	
-	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	private final MemberService memberService;
 	
-	private MemberService memberService;
- 
-	public MemberController(MemberService memberService) 
-	{
-		this.memberService = memberService; 
-	}
-		
-	// 회원 리스트 조회
+	// 응답 데이터: ResponseEntity로 전환
+	// 회원 리스트 조회 : 리스트 반환
 	@GetMapping("/memberlist")
-	@ResponseBody
-	public List<MemberDto> memberlist() throws Exception {
-		return memberService.memberlist();
+	public ResponseEntity<?> memberlist() {
+		try {
+			List<MemberDto> list = memberService.memberlist();
+			 // 리스트가 초기화 되었거나 원소가 있으면
+			if (list != null && !list.isEmpty()) {
+				// Http 헤더에 응답코드 OK 전송, 리스트 반환
+				return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
+			}
+			else {
+				 // 내용이없다는 응답코드 전송
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+			
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 	
-	// 회원 상세
+	// 회원 상세 : dto 반환
 	@GetMapping("/memberdetail/{memberId}")
-	@ResponseBody
-	public MemberDto memberdetail(@PathVariable("memberId") String memberId) throws Exception {
-		return memberService.memberDetail(memberId);	
+	public ResponseEntity<?> memberdetail(@PathVariable("memberId") String memberId){
+		try {
+			MemberDto dto = memberService.memberDetail(memberId);
+			// 해당 사용자가 있어야함 : 상세 정보 전송
+			if (dto != null) {
+				return new ResponseEntity<MemberDto>(dto, HttpStatus.OK); 
+			}
+			else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}	
 	}
 	
 	
-	// 회원 수정
+	// 회원 수정 : messageDto 반환
 	@PutMapping("/memberupdate")
 	public ResponseEntity<?> memberupdate(@RequestBody MemberDto memberDto){
 		try {
 			memberService.memberUpdate(memberDto);
 			MemberDto dto = memberService.memberDetail(memberDto.getMemberId());
+			MessageDto message = new MessageDto();
 			if (dto != null) { // 업데이트된 dto리턴
-				return new ResponseEntity<MemberDto> (dto,HttpStatus.OK);
+				message.setMessage(1);
+				return new ResponseEntity<MessageDto> (message,HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+				message.setMessage(0);
+				return new ResponseEntity<MessageDto>(message, HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
-//	public void memberUpdate(@RequestBody MemberDto memberDto) throws Exception {
-//		memberService.memberUpdate(memberDto);
-//	}
-	
-//	// 삭제 api
-//	@DeleteMapping("/memberDelete/{memberId}")
-//	public void memberDelete(@PathVariable("memberId") String memberId) throws Exception {
-//		memberService.memberDelete(memberId);
-//	}
 	
 	
-	
-	// 삭제 api
+	// 삭제 api : messageDto 반환
 	@DeleteMapping("/memberDelete/{memberId}")
 	public ResponseEntity<?> memberDelete(@PathVariable("memberId") String memberId) {
 		try {
 			memberService.memberDelete(memberId);
 			MemberDto dto = memberService.memberDetail(memberId);
+			MessageDto message = new MessageDto();
 			if (dto == null) { // 성공
-				//MessageDto message = new MessageDto(1);
-				return new ResponseEntity<MemberDto>(list,HttpStatus.OK);				
+				message.setMessage(1);
+				return new ResponseEntity<MessageDto>(message,HttpStatus.OK);				
 			}
 			else { // 정보가 없을때 지울경우
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+				message.setMessage(0);
+				return new ResponseEntity<MessageDto>(message,HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
 			return exceptionHandling(e);
@@ -106,7 +121,7 @@ public class MemberController {
 	// 비번찾기
 	@GetMapping("/password/{memberId}")
 	public String findById(@PathVariable("memberId") String memberId) throws Exception {
-		return memberService.findById(memberId); // message.jsp 대신에 어디로 표시?
+		return memberService.findById(memberId);
 	}
 
 	// 예외
