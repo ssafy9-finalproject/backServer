@@ -7,16 +7,13 @@ import org.springframework.stereotype.Service;
 import com.ssafy.edu.member.model.dao.MemberMapper;
 import com.ssafy.edu.member.model.dto.MemberDto;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
 
-	private MemberMapper memberMapper;
-	
-	
-	public MemberServiceImpl(MemberMapper memberMapper) {
-		super();
-		this.memberMapper = memberMapper;
-	}
+	private final MemberMapper memberMapper;
 
 	@Override
 	public void join(MemberDto mdto) throws Exception {
@@ -40,7 +37,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void memberDelete(String memberId) throws Exception {
-		System.out.println(memberId);
 		memberMapper.memberDelete(memberId);
 	}
 
