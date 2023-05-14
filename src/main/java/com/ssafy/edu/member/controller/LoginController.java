@@ -4,6 +4,8 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
+import com.ssafy.edu.util.MessageDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,8 +29,20 @@ public class LoginController {
 	
 	// 로그인
 	@PostMapping("/login")
-	public MemberDto login(@RequestBody MemberDto mdto) throws Exception {
-		return memberService.login(mdto);
+	public ResponseEntity<?> login(@RequestBody MemberDto mdto){
+		try {
+			MemberDto dto = memberService.login(mdto);
+			MessageDto message = new MessageDto();
+			if (dto != null) { // 유저정보가 있음.
+				return new ResponseEntity<MemberDto>(dto, HttpStatus.OK);
+			}
+			else {
+				message.setMessage(0);
+				return new ResponseEntity<MessageDto>(message, HttpStatus.NO_CONTENT);
+			}
+		} catch(Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 	
 //	@GetMapping("/logout")
@@ -35,4 +50,8 @@ public class LoginController {
 //		session.invalidate();
 //		return "redirect:/";
 //	}
+	// 예외
+	private ResponseEntity<String> exceptionHandling(Exception e) {
+		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

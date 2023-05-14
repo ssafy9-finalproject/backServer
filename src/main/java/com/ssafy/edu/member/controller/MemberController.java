@@ -44,16 +44,8 @@ public class MemberController {
 	public ResponseEntity<?> memberlist() {
 		try {
 			List<MemberDto> list = memberService.memberlist();
-			 // 리스트가 초기화 되었거나 원소가 있으면
-			if (list != null && !list.isEmpty()) {
-				// Http 헤더에 응답코드 OK 전송, 리스트 반환
-				return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
-			}
-			else {
-				 // 내용이없다는 응답코드 전송
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-			
+			// 멤버리스트는 원소가 아무것도없어도 호출이 되어야한다.
+			return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
