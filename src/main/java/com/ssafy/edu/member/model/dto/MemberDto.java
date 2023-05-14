@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -41,13 +43,6 @@ public class MemberDto {
 		super();
 		this.memberId = memberId;
 		this.password = password;
-	}
-
-	@Override
-	public String toString() {
-		return "MemberDto [memberId=" + memberId + ", emailId=" + emailId + ", emailDomain=" + emailDomain
-				+ ", nickname=" + nickname + ", password=" + password + ", phoneNumber=" + phoneNumber + ", createdAt="
-				+ createdAt + ", modifiedAt=" + modifiedAt + ", memberRole=" + memberRole + ", status=" + status + "]";
 	}
 
 }

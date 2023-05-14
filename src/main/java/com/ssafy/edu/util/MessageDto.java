@@ -1,22 +1,14 @@
 package com.ssafy.edu.util;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class <T> MessageDto {
-	private boolean success;
-	
-	
-	
-	public MessageDto(int message) {
-		this.message = message;
-	}
-
-	public int getMessage() {
-		return message;
-	}
-
-	public void setMessage(int message) {
-		this.message = message;
-	}
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class MessageDto {
+	private int message; // 1: 성공 0: 실패
 }
