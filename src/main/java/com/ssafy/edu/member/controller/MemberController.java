@@ -27,11 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
 import com.ssafy.edu.util.MessageDto;
-<<<<<<< HEAD
-=======
 
 import lombok.RequiredArgsConstructor;
->>>>>>> 44e5854354cca62055ea79df4e6cd0aec5ddee3c
 
 // 화면이동 컨트롤러. 차근차근 없애기
 @RestController
@@ -98,16 +95,10 @@ public class MemberController {
 		try {
 			memberService.memberDelete(memberId);
 			MemberDto dto = memberService.memberDetail(memberId);
-<<<<<<< HEAD
-			if (dto == null) { // 성공
-				//MessageDto message = new MessageDto(1);
-				return new ResponseEntity<MemberDto>(list,HttpStatus.OK);				
-=======
 			MessageDto message = new MessageDto();
 			if (dto == null) { // 성공
 				message.setMessage(1);
 				return new ResponseEntity<MessageDto>(message,HttpStatus.OK);				
->>>>>>> 44e5854354cca62055ea79df4e6cd0aec5ddee3c
 			}
 			else { // 정보가 없을때 지울경우
 				message.setMessage(0);
