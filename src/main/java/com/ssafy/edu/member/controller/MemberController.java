@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
-import com.ssafy.edu.util.MessageDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -74,14 +74,11 @@ public class MemberController {
 	public ResponseEntity<?> memberupdate(@RequestBody MemberDto memberDto){
 		try {
 			memberService.memberUpdate(memberDto);
-			MemberDto dto = memberService.memberDetail(memberDto.getMemberId());
-			MessageDto message = new MessageDto();
-			if (dto != null) { // 업데이트된 dto리턴
-				message.setMessage(1);
-				return new ResponseEntity<MessageDto> (message,HttpStatus.OK);
+			MemberDto updateResponseDto = memberService.memberDetail(memberDto.getMemberId());
+			if (updateResponseDto != null) { // 업데이트된 dto리턴
+				return new ResponseEntity<MemberDto> (updateResponseDto,HttpStatus.OK);
 			} else {
-				message.setMessage(0);
-				return new ResponseEntity<MessageDto>(message, HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
 			return exceptionHandling(e);
@@ -95,14 +92,11 @@ public class MemberController {
 		try {
 			memberService.memberDelete(memberId);
 			MemberDto dto = memberService.memberDetail(memberId);
-			MessageDto message = new MessageDto();
-			if (dto == null) { // 성공
-				message.setMessage(1);
-				return new ResponseEntity<MessageDto>(message,HttpStatus.OK);				
+			if (dto == null) { // 성공 : 일단 void로 둬야할듯
+				return new ResponseEntity<Void>(HttpStatus.OK);				
 			}
 			else { // 정보가 없을때 지울경우
-				message.setMessage(0);
-				return new ResponseEntity<MessageDto>(message,HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
 			return exceptionHandling(e);
@@ -116,9 +110,8 @@ public class MemberController {
 		return memberService.findById(memberId);
 	}
 
-	// 예외
-	private ResponseEntity<String> exceptionHandling(Exception e) {
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<String> exceptionHandling(Exception e) {
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 }
