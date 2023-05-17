@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.edu.plan.model.dto.PlanAttractionResponseDto;
 import com.ssafy.edu.plan.model.dto.PlanRegistRequestDto;
 import com.ssafy.edu.plan.service.PlanService;
+import com.ssafy.edu.utils.ApiUtils;
+import com.ssafy.edu.utils.ApiUtils.ApiResult;
 
 @RestController
 @CrossOrigin("*")
@@ -30,11 +32,13 @@ public class PlanController {
 		return planService.keywordSearch(keyword);
 	}
 	
+	
+	
 	@PostMapping("/plan")
-	public String registPlan(@RequestBody PlanRegistRequestDto dto) {
+	public ApiResult<?> registPlan(@RequestBody PlanRegistRequestDto dto) {
 		dto.setMember_id("admin");
 		planService.registPlan(dto);
-		return "testFin";
+		return ApiUtils.success(null);
 	}
 
 }

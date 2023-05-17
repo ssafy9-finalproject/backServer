@@ -1,17 +1,12 @@
 package com.ssafy.edu.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.ssafy.edu.utils.ApiUtils;
-import com.ssafy.edu.utils.ApiUtils.ApiResult;
-
-@RestControllerAdvice
+// 모든 예외를 한곳에서 처리
+@ControllerAdvice
 public class GlobalExceptionHandler {
-
-	@ExceptionHandler
-	public ApiResult IllegalException(IllegalArgumentException e) {
-		return ApiUtils.error("123", HttpStatus.ACCEPTED);
-	}
+	
 }
