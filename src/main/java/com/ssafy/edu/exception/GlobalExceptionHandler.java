@@ -11,7 +11,7 @@ import com.ssafy.edu.utils.ApiUtils.ApiResult;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler
-	public ApiResult<?> IllegalException(IllegalArgumentException e) {
+	public ApiResult IllegalException(IllegalArgumentException e) {
 		return ApiUtils.error("123", HttpStatus.ACCEPTED);
 	}
 }
