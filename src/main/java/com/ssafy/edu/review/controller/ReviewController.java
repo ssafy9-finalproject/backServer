@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.service.ReviewService;
+import com.ssafy.edu.utils.ApiUtils;
+import com.ssafy.edu.utils.ApiUtils.ApiResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +22,12 @@ public class ReviewController {
 	private final ReviewService reviewService;
 	
 	@GetMapping("/review/{id}")
-	public List<MyPlanResponseDto> planList(@PathVariable String id) {
+	public ApiResult<List<MyPlanResponseDto>> planList(@PathVariable String id) {
 		id = "admin";
-		return reviewService.planList(id);
+		return ApiUtils.success(reviewService.planList(id));
 	}
 	@GetMapping("/review/myplan/{pid}")
-	public MyPlanReviewResponseDto myPlanReview(@PathVariable String pid) {
-		return reviewService.myPlanReview(pid);
+	public ApiResult<MyPlanReviewResponseDto> myPlanReview(@PathVariable String pid) {
+		return ApiUtils.success(reviewService.myPlanReview(pid));
 	}
 }
