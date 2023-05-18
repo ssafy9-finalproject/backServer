@@ -19,10 +19,38 @@
 		p.end_date, p.contents, a.content_id, plan_date, i.title as
 		attraction_title, i.content_type_id
 		from plan p
-		join plan_attraction a on p.plan_id = a.plan_id
-		join attraction_info i on a.content_id = i.content_id
+		join plan_attraction a
+		on p.plan_id = a.plan_id
+		join attraction_info i on a.content_id =
+		i.content_id
 		where p.plan_id = #{pid}
-		order by plan_attraction_id ASC, plan_date ASC;
+		order by plan_attraction_id ASC,
+		plan_date ASC;
 	</select>
+
+	<insert id="registReview" parameterType="reviewRegistRequestDto">
+		insert into review (member_id, plan_id, title)
+		values(#{member_id},
+		#{plan_id}, #{title})
+		<selectKey resultType="long" keyProperty="review_id"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<insert id="registReviewContent"
+		parameterType="reviewContentRegistDto">
+		insert into review_content (review_id, contents,
+		review_date)
+		values(#{review_id}, #{contents}, #{review_date})
+	</insert>
+
+	<select id="reviewList" resultType="reviewListResponseDto">
+		select r.review_id, r.title, p.start_date, p.end_date
+		from review r
+		inner join plan p on r.plan_id = p.plan_id
+		where r.status = 'Y' and p.status = 'Y';
+	</select>
+
 
 </mapper>

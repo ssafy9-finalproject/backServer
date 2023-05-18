@@ -8,11 +8,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.edu.plan.model.dto.PlanAttractionRegistDto;
 import com.ssafy.edu.review.model.dao.ReviewMapper;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseEntity;
+import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewDate;
+import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,5 +59,20 @@ public class ReviewServiceImpl implements ReviewService{
             dto.getList().add(reviewDateList);
         }
 		return dto;
+	}
+	@Transactional
+	@Override
+	public void registReview(ReviewRegistRequestDto dto) {
+		reviewMapper.registReview(dto);
+		LocalDate startDate = dto.getStart_date();
+		for(int i = 0; i < dto.getList().size(); i++) {
+			ReviewContentRegistDto rDto = new ReviewContentRegistDto(dto.getReview_id(), dto.getList().get(i), startDate);
+			reviewMapper.registReviewContent(rDto);
+			startDate = startDate.plusDays(1);
+		}
+	}
+	@Override
+	public List<ReviewListResponseDto> reviewList() {
+		return reviewMapper.reviewList();
 	}
 }
