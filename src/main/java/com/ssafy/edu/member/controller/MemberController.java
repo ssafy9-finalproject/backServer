@@ -91,14 +91,14 @@ public class MemberController {
 	public ResponseEntity<?> memberDelete(@PathVariable("memberId") String memberId) {
 		try {
 			memberService.memberDelete(memberId);
-			MemberDto dto = memberService.memberDetail(memberId);
-			if (dto == null) { // 성공 : 일단 void로 둬야할듯
-				return new ResponseEntity<Void>(HttpStatus.OK);				
-			}
-			else { // 정보가 없을때 지울경우
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
+			//MemberDto dto = memberService.memberDetail(memberId);
+			//if (dto == null) { // 성공 : 일단 void로 둬야할듯
+			return new ResponseEntity<Void>(HttpStatus.OK);				
+//			}
+			/*
+			 * else { return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); }
+			 */
+		} catch (Exception e) {  // 정보가 없을때 지울경우
 			return exceptionHandling(e);
 		}
 	}
