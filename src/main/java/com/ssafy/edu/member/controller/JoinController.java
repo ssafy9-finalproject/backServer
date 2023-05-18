@@ -45,15 +45,15 @@ public class JoinController {
 		}
 	}
 	
-	@GetMapping("/check")
-	public ResponseEntity<?> duplicatedIdCheck(@PathVariable String memberId){
+	@GetMapping("/check/{memberId}")
+	public ResponseEntity<?> duplicatedIdCheck(@PathVariable("memberId") String memberId){
 		try {
 			MemberDto responsedto = memberService.memberDetail(memberId);
-			if (responsedto == null) {
+			if (responsedto != null) { // 중복있음 : 반환 dto 있음
 				return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
 			}
-			else {
-				return new ResponseEntity<MemberDto>(responsedto, HttpStatus.NO_CONTENT);
+			else { // 반환없음. 가입가능
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
 		} catch (Exception e) {
 			return exceptionHandling(e);
