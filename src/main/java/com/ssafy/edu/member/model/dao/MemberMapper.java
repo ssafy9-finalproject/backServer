@@ -2,6 +2,7 @@ package com.ssafy.edu.member.model.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,4 +19,8 @@ public interface MemberMapper {
 	void memberUpdate(MemberDto mdto) throws Exception;
 	String findById(String memberId) throws Exception;
 	MemberDto loginMember(String memberId, String memberPassword) throws Exception;
+	
+	public void saveRefreshToken(Map<String, String> map) throws SQLException;
+	public Object getRefreshToken(String userid) throws SQLException;
+	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
 }
