@@ -1,0 +1,270 @@
+﻿-- 테이블 순서는 관계를 고려하여 한 번에 실행해도 에러가 발생하지 않게 정렬되었습니다.
+
+-- members Table Create SQL
+-- 테이블 생성 SQL - members
+CREATE TABLE members
+(
+    `member_id`      VARCHAR(255)    NOT NULL, 
+    `email_id`       VARCHAR(255)    NOT NULL, 
+    `email_domain`   VARCHAR(255)    NOT NULL, 
+    `nickname`       VARCHAR(255)    NOT NULL, 
+    `password`       VARCHAR(255)    NOT NULL, 
+    `phone_number`   VARCHAR(15)     NOT NULL, 
+    `member_role`    CHAR(1)         NOT NULL    DEFAULT 'U', 
+    `social_key`     VARCHAR(255)    NULL, 
+    `refresh_token`  VARCHAR(255)    NULL, 
+    `social_domain`  VARCHAR(255)    NULL, 
+    `status`         CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`     DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`    DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (member_id)
+);
+
+-- Unique Index 설정 SQL - members(nickname)
+CREATE UNIQUE INDEX UQ_members_1
+    ON members(nickname);
+
+
+-- plan Table Create SQL
+-- 테이블 생성 SQL - plan
+CREATE TABLE plan
+(
+    `plan_id`      BIGINT          NOT NULL    AUTO_INCREMENT, 
+    `member_id`    VARCHAR(255)    NOT NULL, 
+    `title`        VARCHAR(255)    NOT NULL, 
+    `start_date`   DATE            NOT NULL, 
+    `end_date`     DATE            NOT NULL, 
+    `contents`     TEXT            NOT NULL, 
+    `status`       CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`   DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`  DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (plan_id)
+);
+
+-- Foreign Key 설정 SQL - plan(member_id) -> members(member_id)
+ALTER TABLE plan
+    ADD CONSTRAINT FK_plan_member_id_members_member_id FOREIGN KEY (member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - plan(member_id)
+-- ALTER TABLE plan
+-- DROP FOREIGN KEY FK_plan_member_id_members_member_id;
+
+
+-- review Table Create SQL
+-- 테이블 생성 SQL - review
+CREATE TABLE review
+(
+    `review_id`    BIGINT          NOT NULL    AUTO_INCREMENT, 
+    `member_id`    VARCHAR(255)    NOT NULL, 
+    `plan_id`      BIGINT          NOT NULL, 
+    `title`        VARCHAR(255)    NOT NULL, 
+    `contents`     TEXT            NOT NULL, 
+    `content_id`   INT             NOT NULL, 
+    `status`       CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`   DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`  DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (review_id)
+);
+
+-- Foreign Key 설정 SQL - review(member_id) -> members(member_id)
+ALTER TABLE review
+    ADD CONSTRAINT FK_review_member_id_members_member_id FOREIGN KEY (member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - review(member_id)
+-- ALTER TABLE review
+-- DROP FOREIGN KEY FK_review_member_id_members_member_id;
+
+-- Foreign Key 설정 SQL - review(plan_id) -> plan(plan_id)
+ALTER TABLE review
+    ADD CONSTRAINT FK_review_plan_id_plan_plan_id FOREIGN KEY (plan_id)
+        REFERENCES plan (plan_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - review(plan_id)
+-- ALTER TABLE review
+-- DROP FOREIGN KEY FK_review_plan_id_plan_plan_id;
+
+
+-- review_content Table Create SQL
+-- 테이블 생성 SQL - review_content
+CREATE TABLE review_content
+(
+    `review_content_id`  BIGINT      NOT NULL    AUTO_INCREMENT, 
+    `review_id`          BIGINT      NOT NULL, 
+    `contents`           TEXT        NOT NULL, 
+    `review_date`        DATE        NOT NULL, 
+    `status`             CHAR(1)     NOT NULL    DEFAULT 'Y', 
+    `created_at`         DATETIME    NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`        DATETIME    NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (review_content_id)
+);
+
+-- Foreign Key 설정 SQL - review_content(review_id) -> review(review_id)
+ALTER TABLE review_content
+    ADD CONSTRAINT FK_review_content_review_id_review_review_id FOREIGN KEY (review_id)
+        REFERENCES review (review_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - review_content(review_id)
+-- ALTER TABLE review_content
+-- DROP FOREIGN KEY FK_review_content_review_id_review_review_id;
+
+
+-- follow Table Create SQL
+-- 테이블 생성 SQL - follow
+CREATE TABLE follow
+(
+    `follow_id`         BIGINT          NOT NULL    AUTO_INCREMENT, 
+    `member_id`         VARCHAR(255)    NOT NULL, 
+    `target_member_id`  VARCHAR(255)    NOT NULL, 
+    `status`            CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`        DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`       DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (follow_id)
+);
+
+-- Foreign Key 설정 SQL - follow(member_id) -> members(member_id)
+ALTER TABLE follow
+    ADD CONSTRAINT FK_follow_member_id_members_member_id FOREIGN KEY (member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - follow(member_id)
+-- ALTER TABLE follow
+-- DROP FOREIGN KEY FK_follow_member_id_members_member_id;
+
+-- Foreign Key 설정 SQL - follow(target_member_id) -> members(member_id)
+ALTER TABLE follow
+    ADD CONSTRAINT FK_follow_target_member_id_members_member_id FOREIGN KEY (target_member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - follow(target_member_id)
+-- ALTER TABLE follow
+-- DROP FOREIGN KEY FK_follow_target_member_id_members_member_id;
+
+
+-- comments Table Create SQL
+-- 테이블 생성 SQL - comments
+CREATE TABLE comments
+(
+    `comment_id`   BIGINT          NOT NULL    AUTO_INCREMENT, 
+    `member_id`    VARCHAR(255)    NOT NULL, 
+    `review_id`    BIGINT          NOT NULL, 
+    `contents`     TEXT            NOT NULL, 
+    `status`       CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`   DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`  DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (comment_id)
+);
+
+-- Foreign Key 설정 SQL - comments(member_id) -> members(member_id)
+ALTER TABLE comments
+    ADD CONSTRAINT FK_comments_member_id_members_member_id FOREIGN KEY (member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - comments(member_id)
+-- ALTER TABLE comments
+-- DROP FOREIGN KEY FK_comments_member_id_members_member_id;
+
+-- Foreign Key 설정 SQL - comments(review_id) -> review(review_id)
+ALTER TABLE comments
+    ADD CONSTRAINT FK_comments_review_id_review_review_id FOREIGN KEY (review_id)
+        REFERENCES review (review_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - comments(review_id)
+-- ALTER TABLE comments
+-- DROP FOREIGN KEY FK_comments_review_id_review_review_id;
+
+
+-- likes Table Create SQL
+-- 테이블 생성 SQL - likes
+CREATE TABLE likes
+(
+    `like_id`      BIGINT          NOT NULL    AUTO_INCREMENT, 
+    `member_id`    VARCHAR(255)    NOT NULL, 
+    `review_id`    BIGINT          NOT NULL, 
+    `status`       CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`   DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`  DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (like_id)
+);
+
+-- Foreign Key 설정 SQL - likes(member_id) -> members(member_id)
+ALTER TABLE likes
+    ADD CONSTRAINT FK_likes_member_id_members_member_id FOREIGN KEY (member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - likes(member_id)
+-- ALTER TABLE likes
+-- DROP FOREIGN KEY FK_likes_member_id_members_member_id;
+
+-- Foreign Key 설정 SQL - likes(review_id) -> review(review_id)
+ALTER TABLE likes
+    ADD CONSTRAINT FK_likes_review_id_review_review_id FOREIGN KEY (review_id)
+        REFERENCES review (review_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - likes(review_id)
+-- ALTER TABLE likes
+-- DROP FOREIGN KEY FK_likes_review_id_review_review_id;
+
+
+-- scrap Table Create SQL
+-- 테이블 생성 SQL - scrap
+CREATE TABLE scrap
+(
+    `scrap_id`     BIGINT          NOT NULL    AUTO_INCREMENT, 
+    `member_id`    VARCHAR(255)    NOT NULL, 
+    `plan_id`      BIGINT          NOT NULL, 
+    `status`       CHAR(1)         NOT NULL    DEFAULT 'Y', 
+    `created_at`   DATETIME        NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`  DATETIME        NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (scrap_id)
+);
+
+-- Foreign Key 설정 SQL - scrap(member_id) -> members(member_id)
+ALTER TABLE scrap
+    ADD CONSTRAINT FK_scrap_member_id_members_member_id FOREIGN KEY (member_id)
+        REFERENCES members (member_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - scrap(member_id)
+-- ALTER TABLE scrap
+-- DROP FOREIGN KEY FK_scrap_member_id_members_member_id;
+
+-- Foreign Key 설정 SQL - scrap(plan_id) -> plan(plan_id)
+ALTER TABLE scrap
+    ADD CONSTRAINT FK_scrap_plan_id_plan_plan_id FOREIGN KEY (plan_id)
+        REFERENCES plan (plan_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - scrap(plan_id)
+-- ALTER TABLE scrap
+-- DROP FOREIGN KEY FK_scrap_plan_id_plan_plan_id;
+
+
+-- plan_attraction Table Create SQL
+-- 테이블 생성 SQL - plan_attraction
+CREATE TABLE plan_attraction
+(
+    `plan_attraction_id`  BIGINT      NOT NULL    AUTO_INCREMENT, 
+    `plan_id`             BIGINT      NOT NULL, 
+    `content_id`          int         NOT NULL, 
+    `plan_date`           DATE        NOT NULL, 
+    `status`              CHAR(1)     NOT NULL    DEFAULT 'Y', 
+    `created_at`          DATETIME    NOT NULL    DEFAULT current_timestamp, 
+    `modified_at`         DATETIME    NULL        DEFAULT current_timestamp on update current_timestamp, 
+     PRIMARY KEY (plan_attraction_id)
+);
+
+-- Foreign Key 설정 SQL - plan_attraction(plan_id) -> plan(plan_id)
+ALTER TABLE plan_attraction
+    ADD CONSTRAINT FK_plan_attraction_plan_id_plan_plan_id FOREIGN KEY (plan_id)
+        REFERENCES plan (plan_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+-- Foreign Key 삭제 SQL - plan_attraction(plan_id)
+-- ALTER TABLE plan_attraction
+-- DROP FOREIGN KEY FK_plan_attraction_plan_id_plan_plan_id;
+
+ALTER TABLE plan_attraction ADD CONSTRAINT FK_planner_TO_attraction_info FOREIGN KEY (
+content_id
+)
+REFERENCES attraction_info (
+content_id
+);
