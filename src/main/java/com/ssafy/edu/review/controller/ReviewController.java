@@ -13,6 +13,7 @@ import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
+import com.ssafy.edu.review.model.dto.SingleReviewResponseDto;
 import com.ssafy.edu.review.service.ReviewService;
 import com.ssafy.edu.utils.ApiUtils;
 import com.ssafy.edu.utils.ApiUtils.ApiResult;
@@ -44,5 +45,10 @@ public class ReviewController {
 	@GetMapping("/review")
 	public ApiResult<List<ReviewListResponseDto>> reviewList() {
 		return ApiUtils.success(reviewService.reviewList());
+	}
+	
+	@GetMapping("/review/all/{id}")
+	public ApiResult<List<SingleReviewResponseDto>> getReview(@PathVariable Long id) {
+		return ApiUtils.success(reviewService.getReview(id));
 	}
 }

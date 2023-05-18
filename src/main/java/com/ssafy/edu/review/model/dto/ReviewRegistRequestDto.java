@@ -3,7 +3,6 @@ package com.ssafy.edu.review.model.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-
 public class ReviewRegistRequestDto {
 	private Long review_id;
 	private String member_id;

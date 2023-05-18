@@ -7,16 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-public class MyPlanResponseDto {
+public class SingleReviewResponseDto {
 
-	private long plan_id;
-	private String member_id;
 	private String title;
 	private LocalDate start_date;
-	private LocalDate end_date;
+	private Integer hit;
 	private String contents;
-	private Integer isReviewExist;
-	
 }

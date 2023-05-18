@@ -6,10 +6,14 @@
 
 	<select id="planList" parameterType="String"
 		resultType="myPlanResponseDto">
-		select plan_id, member_id, title, start_date, end_date,
-		contents
+		select p.plan_id, p.member_id, p.title, p.start_date,
+		p.end_date,
+		p.contents, (
+		select count(*) from review r
+		where p.plan_id = r.plan_id and r.status = 'Y'
+		) as isReviewExist
 		from
-		plan
+		plan p
 		where member_id = #{id} and status = 'Y'
 	</select>
 
@@ -46,11 +50,21 @@
 	</insert>
 
 	<select id="reviewList" resultType="reviewListResponseDto">
-		select r.review_id, r.title, p.start_date, p.end_date
+		select r.review_id, r.title,
+		p.start_date, p.end_date
 		from review r
-		inner join plan p on r.plan_id = p.plan_id
+		inner join plan p on r.plan_id =
+		p.plan_id
 		where r.status = 'Y' and p.status = 'Y';
 	</select>
 
+	<select id="getReview" resultType="singleReviewResponseDto" parameterType="Long">
+		select r.title, r.hit,
+		c.contents, p.start_date
+		from review r
+		join review_content c on r.review_id = c.review_id
+		join plan p on r.plan_id = p.plan_id
+		where r.review_id = #{id};
+	</select>
 
 </mapper>

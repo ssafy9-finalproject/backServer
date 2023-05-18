@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.edu.plan.model.dto.PlanAttractionRegistDto;
 import com.ssafy.edu.review.model.dao.ReviewMapper;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
@@ -17,6 +16,7 @@ import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewDate;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
+import com.ssafy.edu.review.model.dto.SingleReviewResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -74,5 +74,9 @@ public class ReviewServiceImpl implements ReviewService{
 	@Override
 	public List<ReviewListResponseDto> reviewList() {
 		return reviewMapper.reviewList();
+	}
+	@Override
+	public List<SingleReviewResponseDto> getReview(Long id) {
+		return reviewMapper.getReview(id);
 	}
 }
