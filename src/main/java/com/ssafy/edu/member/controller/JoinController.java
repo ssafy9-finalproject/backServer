@@ -30,11 +30,6 @@ public class JoinController {
 	@PostMapping("/join")
 	public ResponseEntity<?> join(@RequestBody MemberDto mdto) {
 		try {
-			// insert문 실행전  : "admin" 검사 : "admin~"으로 시작해야 관리자
-			if (mdto.getMemberId().substring(0,5).equals("Admin") 
-					|| mdto.getMemberId().substring(0,5).equals("admin")) {
-				mdto.setMemberRole('A');
-			}
 			memberService.join(mdto);
 			// join후 유저정보 찾기
 			MemberDto responsedto = memberService.memberDetail(mdto.getMemberId());
