@@ -1,6 +1,8 @@
 package com.ssafy.edu.member.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,27 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public MemberDto loginMember(String memberId, String memberPassword) throws Exception {
 		return memberMapper.loginMember(memberId, memberPassword);
+	}
+
+	@Override
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("token", refreshToken);
+		memberMapper.saveRefreshToken(map);
+	}
+
+	@Override
+	public Object getRefreshToken(String memberId) throws Exception {
+		return memberMapper.getRefreshToken(memberId);
+	}
+
+	@Override
+	public void deleRefreshToken(String userid) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("token", null);
+		memberMapper.deleteRefreshToken(map);
 	}
 
 }

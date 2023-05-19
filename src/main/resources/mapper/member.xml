@@ -28,9 +28,9 @@
 	<insert id="join" parameterType="memberDto">
 			insert into members
 			(member_id,email_id,email_domain,nickname,
-			password,phone_number,created_at)
+			password,phone_number,member_role,created_at)
 			values (#{memberId},#{emailId},#{emailDomain},#{nickname},
-			#{password},#{phoneNumber},now())
+			#{password},#{phoneNumber},#{memberRole},now())
 	</insert>
 	
 	<!-- admin -->
@@ -80,4 +80,22 @@
 		where member_id = #{memberId} and password = #{password}
 		and status='Y'
 	</select>
+	
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select refresh_token
+		from members
+		where member_id = #{member_id}
+	</select>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update members
+		set refresh_token = #{refresh_token}
+		where member_id = #{member_id}
+	</update>
+	
+	<update id="deleteRefreshToken" parameterType="map">
+		update members
+		set refresh_token = #{refresh_token, jdbcType=VARCHAR}
+		where member_id = #{member_id}
+	</update>
 </mapper>
