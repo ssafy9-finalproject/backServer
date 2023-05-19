@@ -28,9 +28,9 @@
 	<insert id="join" parameterType="memberDto">
 			insert into members
 			(member_id,email_id,email_domain,nickname,
-			password,phone_number,member_role,created_at)
+			password,phone_number,created_at)
 			values (#{memberId},#{emailId},#{emailDomain},#{nickname},
-			#{password},#{phoneNumber},#{memberRole},now())
+			#{password},#{phoneNumber},now())
 	</insert>
 	
 	<!-- admin -->
