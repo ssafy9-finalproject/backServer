@@ -75,6 +75,7 @@ public class LoginController {
 	@GetMapping("/info/{memberId}")
 	public ResponseEntity<Map<String, Object>> getInfo(@PathVariable("memberId") String memberId,
 			HttpServletRequest request) {
+		//Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		if (jwtService.checkToken(request.getHeader("access-token"))) {
