@@ -10,11 +10,13 @@
 		p.end_date,
 		p.contents, (
 		select count(*) from review r
-		where p.plan_id = r.plan_id and r.status = 'Y'
+		where p.plan_id =
+		r.plan_id and r.status = 'Y'
 		) as isReviewExist
 		from
 		plan p
-		where member_id = #{id} and status = 'Y'
+		where
+		member_id = #{id} and status = 'Y'
 	</select>
 
 	<select id="myPlanReview" parameterType="String"
@@ -58,13 +60,17 @@
 		where r.status = 'Y' and p.status = 'Y';
 	</select>
 
-	<select id="getReview" resultType="singleReviewResponseDto" parameterType="Long">
-		select r.title, r.hit,
-		c.contents, p.start_date
-		from review r
-		join review_content c on r.review_id = c.review_id
-		join plan p on r.plan_id = p.plan_id
-		where r.review_id = #{id};
+	<select id="getReview" resultType="singleReviewMapperDto"
+		parameterType="Long">
+		select r.title, r.hit, p.start_date, p.end_date,
+		rc.review_date, rc.contents, ai.content_type_id, ai.title as
+		attractionName
+		from review r, review_content rc, plan p, plan_attraction pa,
+		attraction_info ai
+		where r.review_id = rc.review_id and r.plan_id = p.plan_id and pa.plan_id =
+		p.plan_id and ai.content_id = pa.content_id
+		and rc.review_date = pa.plan_date and r.review_id = #{id}
+		order by rc.review_date asc, rc.review_content_id asc;
 	</select>
 
 </mapper>

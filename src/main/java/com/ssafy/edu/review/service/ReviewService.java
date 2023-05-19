@@ -8,6 +8,7 @@ import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
+import com.ssafy.edu.review.model.dto.SingleReviewMapperDto;
 import com.ssafy.edu.review.model.dto.SingleReviewResponseDto;
 
 @Service
@@ -21,6 +22,6 @@ public interface ReviewService {
 
 	List<ReviewListResponseDto> reviewList();
 
-	List<SingleReviewResponseDto> getReview(Long id);
+	SingleReviewResponseDto getReview(Long id);
 
 }

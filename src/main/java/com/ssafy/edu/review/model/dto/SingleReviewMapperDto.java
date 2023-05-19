@@ -1,15 +1,22 @@
 package com.ssafy.edu.review.model.dto;
 
+import java.time.LocalDate;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-public class SingleReviewResponseDto {
+public class SingleReviewMapperDto {
+
 	private String title;
 	private Integer hit;
-	private List<SingleReviewDailyModel> dailyList;
+	private LocalDate start_date;
+	private LocalDate end_date;
+	private LocalDate review_date;
+	private String contents;
+	private Integer content_type_id;
+	private String attractionName;
 }
