@@ -1,6 +1,7 @@
 package com.ssafy.edu.member.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
@@ -118,35 +119,64 @@ public class JwtServiceImpl implements JwtService {
 			return false;
 		}
 	}
+	
+//	@Override
+//	public String decode(String accessToken) {
+//		Base64.Decoder decoder = Base64.getUrlDecoder();
+//		String result = new String(decoder.decode(accessToken)); 
+//		return result; 
+//	}
 
+//	@Override
+//	public Map<String, Object> get(String accessToken) {
+////		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+////				.getRequest();
+////		String jwt = request.getHeader("access-token");
+//		Jws<Claims> claims = null;
+//		try {
+//			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(accessToken);
+//		} catch (Exception e) {
+////			if (logger.isInfoEnabled()) {
+////				e.printStackTrace();
+////			} else {
+//			logger.error(e.getMessage());
+////			}
+//			throw new UnAuthorizedException();
+////			개발환경
+////			Map<String,Object> testMap = new HashMap<>();
+////			testMap.put("userid", userid);
+////			return testMap;
+//		}
+//		// claim 내용
+//		Map<String, Object> value = claims.getBody();
+//		logger.info("value : {}", value);
+//		logger.info(value.get("memberId").toString());
+//		String memberId = value.get("memberId").toString();
+//		return memberId;
+//	}
+	
 	@Override
-	public Map<String, Object> get(String key) {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-				.getRequest();
-		String jwt = request.getHeader("access-token");
+	public String getMemberId(String accessToken) {
+		
 		Jws<Claims> claims = null;
 		try {
-			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(jwt);
+			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(accessToken);
 		} catch (Exception e) {
-//			if (logger.isInfoEnabled()) {
-//				e.printStackTrace();
-//			} else {
 			logger.error(e.getMessage());
-//			}
 			throw new UnAuthorizedException();
-//			개발환경
-//			Map<String,Object> testMap = new HashMap<>();
-//			testMap.put("userid", userid);
-//			return testMap;
 		}
+		// claim 내용
 		Map<String, Object> value = claims.getBody();
-		logger.info("value : {}", value);
-		return value;
+		/* logger.info("value : {}", value); */
+		/* logger.info(value.get("memberId").toString()); */
+		// claim에서 memberId만 호출
+		String memberId = value.get("memberId").toString();
+		return memberId;
 	}
 
-	@Override
-	public String getUserId() {
-		return (String) this.get("user").get("userid");
-	}
+//	@Override
+//	public String getUserId() {
+//		return (String) this.get("member").get("memberId");
+//	}
 
 }
