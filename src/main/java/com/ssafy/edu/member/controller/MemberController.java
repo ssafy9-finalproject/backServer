@@ -1,6 +1,8 @@
 package com.ssafy.edu.member.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -25,17 +27,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.edu.member.model.dto.AccessTokenDto;
 import com.ssafy.edu.member.model.dto.MemberDto;
+import com.ssafy.edu.member.service.JwtService;
 import com.ssafy.edu.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 // 화면이동 컨트롤러. 차근차근 없애기
+@Slf4j // 롬복 로깅 라이브러리
 @RestController
 @RequiredArgsConstructor // MemberService를 한번 생성하고 바꿀필요없으므로 final, RequiredArgsConstructor사용
 @CrossOrigin("*")
 public class MemberController {
 	
+	private static final Logger log = LoggerFactory.getLogger(MemberController.class);
+
+	private final JwtService jwtService;
 	private final MemberService memberService;
 	
 	// 응답 데이터: ResponseEntity로 전환
@@ -101,6 +110,17 @@ public class MemberController {
 		} catch (Exception e) {  // 정보가 없을때 지울경우
 			return exceptionHandling(e);
 		}
+	}
+	
+	@PostMapping("/token")
+	public Map<String,Object> getMemberId(@RequestBody AccessTokenDto accessToken) {
+		//log.info("1: " + accessToken.toString());
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("message", "success");
+		String memberId = jwtService.getMemberId(accessToken.getAccessToken());
+		map.put("memberId", memberId);
+		//log.info("2:" + memberId);
+		return map;
 	}
 		
 
