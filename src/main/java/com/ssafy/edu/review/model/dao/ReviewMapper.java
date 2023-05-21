@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseEntity;
 import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
+import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewModifyModel;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
 import com.ssafy.edu.review.model.dto.SingleReviewMapperDto;
 
@@ -25,5 +27,18 @@ public interface ReviewMapper {
 	List<ReviewListResponseDto> reviewList();
 
 	List<SingleReviewMapperDto> getReview(Long id);
+
+	void deleteReview(Long id);
+
+	void modifyReview(ReviewRegistRequestDto dto);
+
+	void modifyReviewContents(ReviewModifyModel rModel);
+
+	void updateHit(Long id);
+
+	void updateLike(ReviewLikeRequestDto dto);
+
+	void deleteLike(ReviewLikeRequestDto dto);
+
 
 }

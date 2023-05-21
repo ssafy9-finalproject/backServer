@@ -14,7 +14,9 @@ import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseEntity;
 import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewDate;
+import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewModifyModel;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
 import com.ssafy.edu.review.model.dto.SingleReviewDailyModel;
 import com.ssafy.edu.review.model.dto.SingleReviewMapperDto;
@@ -83,6 +85,9 @@ public class ReviewServiceImpl implements ReviewService{
 		SingleReviewResponseDto dto = new SingleReviewResponseDto();
 		dto.setTitle(mapperList.get(0).getTitle());
 		dto.setHit(mapperList.get(0).getHit());
+		dto.setMember_id(mapperList.get(0).getMember_id());
+		dto.setIsLikeExist(mapperList.get(0).getIsLikeExist());
+		dto.setLikeCount(mapperList.get(0).getLikeCount());
 		
 		List<SingleReviewDailyModel> dailyModelList = new ArrayList<SingleReviewDailyModel>();
 		long daysDifference = ChronoUnit.DAYS.between(mapperList.get(0).getStart_date(), mapperList.get(0).getEnd_date());
@@ -116,5 +121,34 @@ public class ReviewServiceImpl implements ReviewService{
 		}
 		dto.setDailyList(dailyModelList);
 		return dto;
+	}
+	@Override
+	public void deleteReview(Long id) {
+		reviewMapper.deleteReview(id);
+	}
+	@Override
+	public void modifyReview(ReviewRegistRequestDto dto) {
+		reviewMapper.modifyReview(dto);
+		List<ReviewModifyModel> list = new ArrayList<ReviewModifyModel>();
+		LocalDate theDay = dto.getStart_date();
+		for(int i = 0; i < dto.getList().size(); i++) {
+			ReviewModifyModel rModel = new ReviewModifyModel(dto.getReview_id(), 
+					theDay, dto.getList().get(i));
+			reviewMapper.modifyReviewContents(rModel);
+			theDay = theDay.plusDays(1);
+		}
+		
+	}
+	@Override
+	public void updateHit(Long id) {
+		reviewMapper.updateHit(id);
+	}
+	@Override
+	public void updateLike(ReviewLikeRequestDto dto) {
+		reviewMapper.updateLike(dto);
+	}
+	@Override
+	public void deleteLike(ReviewLikeRequestDto dto) {
+		reviewMapper.deleteLike(dto);
 	}
 }
