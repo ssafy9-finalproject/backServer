@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.edu.exception.NotFoundException;
 import com.ssafy.edu.review.model.dao.ReviewMapper;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
@@ -82,6 +84,9 @@ public class ReviewServiceImpl implements ReviewService{
 	@Override
 	public SingleReviewResponseDto getReview(Long id) {
 		List<SingleReviewMapperDto> mapperList = reviewMapper.getReview(id);
+		if(mapperList.isEmpty()) {
+			throw new NotFoundException("해당 리뷰가 존재하지 않습니다");
+		}
 		SingleReviewResponseDto dto = new SingleReviewResponseDto();
 		dto.setTitle(mapperList.get(0).getTitle());
 		dto.setHit(mapperList.get(0).getHit());

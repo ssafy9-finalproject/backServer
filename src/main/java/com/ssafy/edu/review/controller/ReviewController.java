@@ -2,6 +2,7 @@ package com.ssafy.edu.review.controller;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class ReviewController {
 	}
 	
 	@PostMapping("/review")
-	public ApiResult<?> registReview(@RequestBody ReviewRegistRequestDto dto) {
+	public ApiResult<?> registReview(@Validated @RequestBody ReviewRegistRequestDto dto) {
 		reviewService.registReview(dto);
 		return ApiUtils.success(null);
 	}
@@ -55,7 +56,7 @@ public class ReviewController {
 		return ApiUtils.success(reviewService.getReview(id));
 	}
 	@PutMapping("/review")
-	public ApiResult<?> modifyReview(@RequestBody ReviewRegistRequestDto dto) {
+	public ApiResult<?> modifyReview(@Validated @RequestBody ReviewRegistRequestDto dto) {
 		reviewService.modifyReview(dto);
 		return ApiUtils.success(null);
 	}
