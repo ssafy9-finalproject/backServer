@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -62,19 +63,23 @@ public class MemberController {
 	
 	// 회원 상세 : dto 반환
 	@GetMapping("/memberdetail/{memberId}")
-	public ResponseEntity<?> memberdetail(@PathVariable("memberId") String memberId){
-		try {
-			MemberDto dto = memberService.memberDetail(memberId);
-			// 해당 사용자가 있어야함 : 상세 정보 전송
-			if (dto != null) {
-				return new ResponseEntity<MemberDto>(dto, HttpStatus.OK); 
+	public ResponseEntity<?> memberdetail(@PathVariable("memberId") String memberId,
+			HttpServletRequest request){
+		MemberDto dto = null;
+		if (jwtService.checkToken(request.getHeader("access-token"))) {
+			try {
+				// 해당 사용자가 있어야함 : 상세 정보 전송
+				dto = memberService.memberDetail(memberId);
+			} catch (Exception e) {
+				return exceptionHandling(e);
 			}
-			else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}	
+		}
+		if (dto != null) {
+			return new ResponseEntity<MemberDto>(dto, HttpStatus.OK); 
+		}
+		else {
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
 	}
 	
 	
