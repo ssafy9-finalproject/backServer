@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewCommentsRequestDto;
+import com.ssafy.edu.review.model.dto.ReviewCommentsResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
@@ -80,5 +82,14 @@ public class ReviewController {
 	public ApiResult<?> deleteLike(@RequestBody ReviewLikeRequestDto dto) {
 		reviewService.deleteLike(dto);
 		return ApiUtils.success(null);
-	} 
+	}
+	@GetMapping("/review/comments/{id}")
+	public ApiResult<List<ReviewCommentsResponseDto>> getComments(@PathVariable Long id) {
+		return ApiUtils.success(reviewService.getComments(id));
+	}
+	@PostMapping("/review/comments")
+	public ApiResult<?> reigstComments(@RequestBody ReviewCommentsRequestDto dto) {
+		reviewService.registComments(dto);
+		return ApiUtils.success(null);
+	}
 }

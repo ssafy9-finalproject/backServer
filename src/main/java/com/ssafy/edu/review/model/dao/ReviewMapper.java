@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseEntity;
+import com.ssafy.edu.review.model.dto.ReviewCommentsRequestDto;
+import com.ssafy.edu.review.model.dto.ReviewCommentsResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
@@ -40,6 +42,10 @@ public interface ReviewMapper {
 	void updateLike(ReviewLikeRequestDto dto);
 
 	void deleteLike(ReviewLikeRequestDto dto);
+
+	List<ReviewCommentsResponseDto> getComments(Long id);
+
+	void registComments(ReviewCommentsRequestDto dto);
 
 
 }

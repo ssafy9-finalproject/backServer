@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewCommentsRequestDto;
+import com.ssafy.edu.review.model.dto.ReviewCommentsResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
@@ -34,5 +36,9 @@ public interface ReviewService {
 	void updateLike(ReviewLikeRequestDto dto);
 
 	void deleteLike(ReviewLikeRequestDto dto);
+
+	List<ReviewCommentsResponseDto> getComments(Long id);
+
+	void registComments(ReviewCommentsRequestDto dto);
 
 }

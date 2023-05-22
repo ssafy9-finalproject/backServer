@@ -14,6 +14,8 @@ import com.ssafy.edu.review.model.dao.ReviewMapper;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseEntity;
+import com.ssafy.edu.review.model.dto.ReviewCommentsRequestDto;
+import com.ssafy.edu.review.model.dto.ReviewCommentsResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewDate;
 import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
@@ -155,5 +157,14 @@ public class ReviewServiceImpl implements ReviewService{
 	@Override
 	public void deleteLike(ReviewLikeRequestDto dto) {
 		reviewMapper.deleteLike(dto);
+	}
+	@Override
+	public List<ReviewCommentsResponseDto> getComments(Long id) {
+		return reviewMapper.getComments(id);
+	}
+	@Override
+	public void registComments(ReviewCommentsRequestDto dto) {
+		reviewMapper.registComments(dto);
+		
 	}
 }

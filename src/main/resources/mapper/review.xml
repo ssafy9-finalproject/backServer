@@ -67,11 +67,13 @@
 		rc.review_date, rc.contents, ai.content_type_id, ai.title
 		as attractionName,
 		(
-		select count(*) from likes l where r.member_id = l.member_id and r.review_id
+		select count(*) from likes l where r.member_id =
+		l.member_id and r.review_id
 		= l.review_id
 		) as isLikeExist,
 		(
-		select count(*) from likes l where r.review_id = l.review_id
+		select
+		count(*) from likes l where r.review_id = l.review_id
 		) as likeCount
 		from review r, review_content rc, plan p,
 		plan_attraction
@@ -113,15 +115,29 @@
 		+ 1
 		where review_id = #{id}
 	</update>
-	
+
 	<insert id="updateLike" parameterType="reviewLikeRequestDto">
-		insert into likes (member_id, review_id)
+		insert into likes
+		(member_id, review_id)
 		values(#{member_id}, #{review_id})
 	</insert>
-	
+
 	<delete id="deleteLike" parameterType="reviewLikeRequestDto">
 		delete from likes
-		where member_id = #{member_id} and review_id = #{review_id}
+		where
+		member_id = #{member_id} and review_id = #{review_id}
 	</delete>
 
+	<select id="getComments" parameterType="Long"
+		resultType="reviewCommentsResponseDto">
+		select member_id, contents from comments
+		where status = 'Y'
+		and review_id = #{id};
+	</select>
+
+	<insert id="registComments" parameterType="reviewCommentsRequestDto">
+		insert into comments
+		(member_id, review_id, contents)
+		values(#{member_id}, #{review_id}, #{contents})
+	</insert>
 </mapper>
