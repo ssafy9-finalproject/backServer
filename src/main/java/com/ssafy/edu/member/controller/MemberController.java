@@ -66,6 +66,7 @@ public class MemberController {
 	@GetMapping("/memberdetail/{memberId}")
 	public ResponseEntity<?> memberdetail(@PathVariable("memberId") String memberId
 			, HttpServletRequest request){
+		log.debug("memberdetail 진입");
 		MemberDto dto = null;
 		// id가 관리자일때
 		String token = request.getHeader("access-token");
