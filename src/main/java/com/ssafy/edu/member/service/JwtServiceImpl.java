@@ -104,7 +104,7 @@ public class JwtServiceImpl implements JwtService {
 	public boolean checkToken(String jwt) {
 		try {
 			Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-			logger.info("checkToken 완료 : {}",claims.getBody().toString());
+			//logger.info("checkToken 완료 : {}",claims.getBody().toString());
 			return true;
 		} catch (Exception e) {
 			logger.error(e.getMessage());
