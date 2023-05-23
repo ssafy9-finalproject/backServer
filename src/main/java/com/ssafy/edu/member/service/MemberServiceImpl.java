@@ -58,10 +58,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
+	public void saveRefreshToken(String memberId, String refreshToken) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("userid", userid);
-		map.put("token", refreshToken);
+		map.put("memberId", memberId);
+		map.put("refreshToken", refreshToken);
 		memberMapper.saveRefreshToken(map);
 	}
 
@@ -71,10 +71,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void deleRefreshToken(String userid) throws Exception {
+	public void deleRefreshToken(String memberId) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("userid", userid);
-		map.put("token", null);
+		map.put("memberId", memberId);
+		map.put("refreshToken", null);
 		memberMapper.deleteRefreshToken(map);
 	}
 

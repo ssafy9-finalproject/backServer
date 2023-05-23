@@ -17,7 +17,7 @@ public interface MemberService {
 	String findById(String memberId) throws Exception;
 	MemberDto loginMember(String memberId, String memberPassword) throws Exception;
 	
-	public void saveRefreshToken(String userid, String refreshToken) throws Exception;
-	public Object getRefreshToken(String userid) throws Exception;
-	public void deleRefreshToken(String userid) throws Exception;
+	public void saveRefreshToken(String memberId, String refreshToken) throws Exception;
+	public Object getRefreshToken(String memberId) throws Exception;
+	public void deleRefreshToken(String memberId) throws Exception;
 }

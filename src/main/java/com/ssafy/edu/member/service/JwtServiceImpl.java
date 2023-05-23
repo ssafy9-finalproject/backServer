@@ -69,7 +69,7 @@ public class JwtServiceImpl implements JwtService {
 				// 만료일 설정 (유효기간)
 				.setExpiration(new Date(System.currentTimeMillis() + expire)); 
 		
-		logger.info("시간 찍어보기 : {}",new Date(System.currentTimeMillis() + expire));
+		//logger.info("시간 찍어보기 : {}",new Date(System.currentTimeMillis() + expire));
 		// 저장할 data의 key, value
 		claims.put(key, data); 
 		
@@ -80,7 +80,7 @@ public class JwtServiceImpl implements JwtService {
 				// Signature 설정 : secret key를 활용한 암호화.
 				.signWith(SignatureAlgorithm.HS256, this.generateKey())
 				.compact(); // 직렬화 처리.
-		logger.debug("create jwt:{}", jwt);
+		//logger.debug("create jwt:{}", jwt);
 		return jwt;
 	}
 

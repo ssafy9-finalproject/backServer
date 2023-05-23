@@ -84,18 +84,18 @@
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select refresh_token
 		from members
-		where member_id = #{member_id}
+		where member_id = #{memberId}
 	</select>
 	
 	<update id="saveRefreshToken" parameterType="map">
 		update members
-		set refresh_token = #{refresh_token}
-		where member_id = #{member_id}
+		set refresh_token = #{refreshToken}
+		where member_id = #{memberId}
 	</update>
 	
 	<update id="deleteRefreshToken" parameterType="map">
 		update members
-		set refresh_token = #{refresh_token, jdbcType=VARCHAR}
-		where member_id = #{member_id}
+		set refresh_token = #{refreshToken, jdbcType=VARCHAR}
+		where member_id = #{memberId}
 	</update>
 </mapper>
