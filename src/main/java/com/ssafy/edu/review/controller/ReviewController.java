@@ -65,9 +65,9 @@ public class ReviewController {
 	public ApiResult<SingleReviewResponseDto> getReview(@PathVariable Long id, HttpServletRequest request) {
 		String token = request.getHeader("access-token");
 		if(token == null) {
-			log.debug("%%%%%%%%%%%% no token");
 			return ApiUtils.success(reviewService.getReview(id,""));
 		}
+		log.debug("getReview token 얻기전: %%%%%%%%%%%%%%%%%%%%%");
 		String memberId = jwtService.getMemberId(token);
 		return ApiUtils.success(reviewService.getReview(id,memberId));
 	}
