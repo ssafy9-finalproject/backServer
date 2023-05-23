@@ -36,6 +36,7 @@ public class JwtServiceImpl implements JwtService {
 	public <T> String createAccessToken(String key, T data) {
 		// 10분
 		return create(key, data, "access-token", ACCESS_TOKEN_EXPIRE);
+		// 5초
 		//return create(key, data, "access-token", 1000 * 10 * ACCESS_TOKEN_EXPIRE_MINUTES);
 	}
 
