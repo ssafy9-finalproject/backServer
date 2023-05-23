@@ -37,7 +37,7 @@ public class JwtServiceImpl implements JwtService {
 		// 10분
 		return create(key, data, "access-token", ACCESS_TOKEN_EXPIRE);
 		// 5초
-		//return create(key, data, "access-token", 1000 * 10 * ACCESS_TOKEN_EXPIRE_MINUTES);
+		//return create(key, data, "access-token", 1000 * 60L);
 	}
 
 //	AccessToken에 비해 유효기간을 길게...
@@ -45,7 +45,8 @@ public class JwtServiceImpl implements JwtService {
 	public <T> String createRefreshToken(String key, T data) {
 		// 7일
 		return create(key, data, "refresh-token", REFRESH_TOKEN_EXPIRE);
-		//return create(key, data, "refresh-token", 1000 * 10 * ACCESS_TOKEN_EXPIRE_MINUTES);
+		// 5초
+		//return create(key, data, "refresh-token", 1000 * 60L);
 	}
 
 	//Token 발급
