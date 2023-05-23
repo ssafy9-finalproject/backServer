@@ -34,7 +34,6 @@ public class PlanController {
 	
 	@PostMapping("/plan")
 	public ApiResult<?> registPlan(@RequestBody PlanRegistRequestDto dto) {
-		dto.setMember_id("admin");
 		planService.registPlan(dto);
 		return ApiUtils.success(null);
 	}

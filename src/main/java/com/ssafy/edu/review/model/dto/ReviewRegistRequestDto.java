@@ -3,10 +3,19 @@ package com.ssafy.edu.review.model.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+
+       
 public class ReviewRegistRequestDto {
 	private Long review_id;
+	
+	@NotBlank
 	private String member_id;
+	@NotNull
 	private Long plan_id;
+	@NotBlank(message = "제목을 입력해 주세요")
 	private String title;
 	private LocalDate start_date;
 	private List<String> list;
