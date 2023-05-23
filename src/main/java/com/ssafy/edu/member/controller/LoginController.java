@@ -55,6 +55,7 @@ public class LoginController {
 				System.out.println(1);
 				String accessToken = jwtService.createAccessToken("memberId", loginUser.getMemberId());// key, data
 				String refreshToken = jwtService.createRefreshToken("memberId", loginUser.getMemberId());// key, data
+				// (memberId, refreshtoken)
 				memberService.saveRefreshToken(mdto.getMemberId(), refreshToken);
 				resultMap.put("access-token", accessToken);
 				resultMap.put("refresh-token", refreshToken);
