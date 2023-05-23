@@ -32,8 +32,6 @@ public class PlanController {
 		return planService.keywordSearch(keyword);
 	}
 	
-	
-	
 	@PostMapping("/plan")
 	public ApiResult<?> registPlan(@RequestBody PlanRegistRequestDto dto) {
 		dto.setMember_id("admin");
