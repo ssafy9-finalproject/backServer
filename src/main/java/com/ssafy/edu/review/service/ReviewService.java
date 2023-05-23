@@ -25,7 +25,7 @@ public interface ReviewService {
 
 	List<ReviewListResponseDto> reviewList();
 
-	SingleReviewResponseDto getReview(Long id);
+	SingleReviewResponseDto getReview(Long id, String memberId);
 
 	void deleteReview(Long id);
 

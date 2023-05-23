@@ -12,6 +12,7 @@ import com.ssafy.edu.review.model.dto.ReviewCommentsResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewMapperRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewModifyModel;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
 import com.ssafy.edu.review.model.dto.SingleReviewMapperDto;
@@ -29,7 +30,7 @@ public interface ReviewMapper {
 
 	List<ReviewListResponseDto> reviewList();
 
-	List<SingleReviewMapperDto> getReview(Long id);
+	List<SingleReviewMapperDto> getReview(ReviewMapperRequestDto dto);
 
 	void deleteReview(Long id);
 

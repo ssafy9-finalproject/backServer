@@ -20,6 +20,7 @@ import com.ssafy.edu.review.model.dto.ReviewContentRegistDto;
 import com.ssafy.edu.review.model.dto.ReviewDate;
 import com.ssafy.edu.review.model.dto.ReviewLikeRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewListResponseDto;
+import com.ssafy.edu.review.model.dto.ReviewMapperRequestDto;
 import com.ssafy.edu.review.model.dto.ReviewModifyModel;
 import com.ssafy.edu.review.model.dto.ReviewRegistRequestDto;
 import com.ssafy.edu.review.model.dto.SingleReviewDailyModel;
@@ -84,8 +85,9 @@ public class ReviewServiceImpl implements ReviewService{
 		return reviewMapper.reviewList();
 	}
 	@Override
-	public SingleReviewResponseDto getReview(Long id) {
-		List<SingleReviewMapperDto> mapperList = reviewMapper.getReview(id);
+	public SingleReviewResponseDto getReview(Long id, String memberId) {
+		ReviewMapperRequestDto requestDto = new ReviewMapperRequestDto(id, memberId);
+		List<SingleReviewMapperDto> mapperList = reviewMapper.getReview(requestDto);
 		if(mapperList.isEmpty()) {
 			throw new NotFoundException("해당 리뷰가 존재하지 않습니다");
 		}

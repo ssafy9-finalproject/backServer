@@ -61,19 +61,17 @@
 	</select>
 
 	<select id="getReview" resultType="singleReviewMapperDto"
-		parameterType="Long">
+		parameterType="reviewMapperRequestDto">
 		select r.title, r.hit, r.member_id, p.start_date,
 		p.end_date,
 		rc.review_date, rc.contents, ai.content_type_id, ai.title
 		as attractionName,
 		(
-		select count(*) from likes l where r.member_id =
-		l.member_id and r.review_id
-		= l.review_id
+		select count(*) from likes l 
+		where r.review_id = l.review_id and l.member_id = #{memberId}
 		) as isLikeExist,
 		(
-		select
-		count(*) from likes l where r.review_id = l.review_id
+		select count(*) from likes l where r.review_id = l.review_id
 		) as likeCount
 		from review r, review_content rc, plan p,
 		plan_attraction
