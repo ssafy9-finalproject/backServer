@@ -1,35 +1,43 @@
 package com.ssafy.edu.member.model.dto;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @Data
 @Entity
-@Table(name = "T-USER")
-@NoArgsConstructor
-@AllArgsConstructor
-public class User implements UserDetails{
+@Table(name = "USERS")
+@ToString
+@EntityListeners(AuditingEntityListener.class)
+public class User{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "USER_SEQUENCD_ID")
-	private Long userSequenceId;
+	@Column(name = "user_id")
+	private String userId;
 	
-	@Column(name = "USER_EMAIL", nullable = false, length = 100, unique = true)
-	private String userEmail;
+	@Column(name = "user_name")
+	private String userName;
 	
-	@Column(name="USER_BIRTH", length=6)
-	private String userBirth;
+	@Column(name="user_pwd")
+	private String userPwd;
 	
-	@Column(name="USER_NICKNAME", length=15)
-	private String userNickname;
+	@Column
+	private String company;
+	
+	@Column
+	private String position;
 }
