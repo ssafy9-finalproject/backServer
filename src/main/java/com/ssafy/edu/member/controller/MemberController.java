@@ -124,16 +124,16 @@ public class MemberController {
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
-	@PostMapping("/token")
-	public Map<String,Object> getMemberId(@RequestBody AccessTokenDto accessToken) {
-		//log.info("1: " + accessToken.toString());
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("message", "success");
-		String memberId = jwtService.getMemberId(accessToken.getAccessToken());
-		map.put("memberId", memberId);
-		//log.info("2:" + memberId);
-		return map;
-	}
+//	@PostMapping("/token")
+//	public Map<String,Object> getMemberId(@RequestBody AccessTokenDto accessToken) {
+//		//log.info("1: " + accessToken.toString());
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("message", "success");
+//		String memberId = jwtService.getMemberId(accessToken.getAccessToken());
+//		map.put("memberId", memberId);
+//		//log.info("2:" + memberId);
+//		return map;
+//	}
 		
 
 	// 비번찾기
