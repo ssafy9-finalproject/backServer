@@ -61,16 +61,81 @@
 	</select>
 
 	<select id="getReview" resultType="singleReviewMapperDto"
-		parameterType="Long">
-		select r.title, r.hit, p.start_date, p.end_date,
-		rc.review_date, rc.contents, ai.content_type_id, ai.title as
-		attractionName
-		from review r, review_content rc, plan p, plan_attraction pa,
+		parameterType="reviewMapperRequestDto">
+		select r.title, r.hit, r.member_id, p.start_date,
+		p.end_date,
+		rc.review_date, rc.contents, ai.content_type_id, ai.title
+		as attractionName,
+		(
+		select count(*) from likes l 
+		where r.review_id = l.review_id and l.member_id = #{memberId}
+		) as isLikeExist,
+		(
+		select count(*) from likes l where r.review_id = l.review_id
+		) as likeCount
+		from review r, review_content rc, plan p,
+		plan_attraction
+		pa,
 		attraction_info ai
-		where r.review_id = rc.review_id and r.plan_id = p.plan_id and pa.plan_id =
-		p.plan_id and ai.content_id = pa.content_id
+		where r.review_id = rc.review_id
+		and r.plan_id =
+		p.plan_id and pa.plan_id =
+		p.plan_id and ai.content_id
+		= pa.content_id
 		and rc.review_date = pa.plan_date and r.review_id = #{id}
-		order by rc.review_date asc, rc.review_content_id asc;
+		order by
+		rc.review_date asc, rc.review_content_id asc;
 	</select>
 
+	<update id="modifyReview" parameterType="reviewRegistRequestDto">
+		update review set
+		title =
+		#{title}
+		where review_id = #{review_id}
+	</update>
+
+	<update id="modifyReviewContents"
+		parameterType="reviewModifyModel">
+		update review_content set
+		contents = #{contents}
+		where
+		review_id = #{review_id} and review_date = #{review_date}
+	</update>
+
+	<update id="deleteReview" parameterType="Long">
+		update review set status
+		='N'
+		where review_id = #{id};
+	</update>
+
+	<update id="updateHit" parameterType="Long">
+		update review set hit = hit
+		+ 1
+		where review_id = #{id}
+	</update>
+
+	<insert id="updateLike" parameterType="reviewLikeRequestDto">
+		insert into likes
+		(member_id, review_id)
+		values(#{member_id}, #{review_id})
+	</insert>
+
+	<delete id="deleteLike" parameterType="reviewLikeRequestDto">
+		delete from likes
+		where
+		member_id = #{member_id} and review_id = #{review_id}
+	</delete>
+
+	<select id="getComments" parameterType="Long"
+		resultType="reviewCommentsResponseDto">
+		select member_id, contents from comments
+		where status = 'Y'
+		and review_id = #{id};
+	</select>
+
+	<insert id="registComments" parameterType="reviewCommentsRequestDto">
+		insert into comments
+		(member_id, review_id, contents)
+		values(#{member_id}, #{review_id}, #{contents})
+	</insert>
 </mapper>
