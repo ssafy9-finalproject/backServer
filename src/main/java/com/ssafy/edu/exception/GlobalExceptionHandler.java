@@ -54,4 +54,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiUtils.ApiResult<?>> handleInternalServerErrorException(InternalServerErrorException e){
 		return errorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // 500
 	}
+	
+	// 회원가입
+	@ExceptionHandler(DuplicatedMemberException.class)
+	public ResponseEntity<ApiUtils.ApiResult<?>> handleDuplicatedMemberException(DuplicatedMemberException e){
+		// 204: 컨텐츠는 제공하지않는다.
+		return errorResponse(e.getMessage(), HttpStatus.NO_CONTENT);
+	}
 }
