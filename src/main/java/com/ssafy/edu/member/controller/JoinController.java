@@ -27,23 +27,23 @@ public class JoinController {
 	private final MemberService memberService;
 	
 	// 회원가입 : insert
-	@PostMapping("/join")
-	public ResponseEntity<?> join(@RequestBody MemberDto mdto) {
-		try {
-			memberService.join(mdto);
-			// join후 유저정보 찾기
-			MemberDto responsedto = memberService.memberDetail(mdto.getMemberId());
-			// 잘 등록되면 : messagedto 반환
-			if (responsedto != null) { // 성공
-				return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
-			}
-			else { // 이거 프론트단에서 응답코드 처리해야하는지 아직 모르겠음.
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch(Exception e) {
-			return exceptionHandling(e);
-		}
-	}
+//	@PostMapping("/join")
+//	public ResponseEntity<?> join(@RequestBody MemberDto mdto) {
+//		try {
+//			memberService.join(mdto);
+//			// join후 유저정보 찾기
+//			MemberDto responsedto = memberService.memberDetail(mdto.getMemberId());
+//			// 잘 등록되면 : messagedto 반환
+//			if (responsedto != null) { // 성공
+//				return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
+//			}
+//			else { // 이거 프론트단에서 응답코드 처리해야하는지 아직 모르겠음.
+//				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+//			}
+//		} catch(Exception e) {
+//			return exceptionHandling(e);
+//		}
+//	}
 	
 	@GetMapping("/check/{memberId}")
 	public ResponseEntity<?> duplicatedIdCheck(@PathVariable("memberId") String memberId){

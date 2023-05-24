@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtTokenProvider {
 	private String secretKey = "ssafySecret";
 	
+	// 10분
 	private long tokenValidTime = 1000 * 60 * 10L;
 	
 	private final UserDetailsService userDetailsService;
@@ -35,9 +36,9 @@ public class JwtTokenProvider {
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
 	}
 	
-	public String createToken(String userPk, List<String> roles) {
-		Claims claims = Jwts.claims().setSubject(userPk);
-		claims.put("roles", roles);
+	public String createToken(String memberId, char memberRole) {
+		Claims claims = Jwts.claims().setSubject(memberId);
+		claims.put("roles", memberRole);
 		Date now = new Date();
 		return Jwts.builder()
 				.setClaims(claims)

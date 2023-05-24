@@ -35,7 +35,6 @@ public class MemberDto implements UserDetails{
 	private char memberRole; // 사용자 역할
 	private char status; // 삭제 상태 
 	
-	private List<String> roles = new ArrayList<>();
 	
 	
 	public MemberDto(String memberId, String emailId, String emailDomain, String nickname, String password,
@@ -70,7 +69,7 @@ public class MemberDto implements UserDetails{
 
 	@Override
 	public String getUsername() {
-		return emailId;
+		return memberId;
 	}
 
 	@Override
