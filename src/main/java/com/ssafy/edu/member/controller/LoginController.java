@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.edu.exception.NotFoundException;
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.JwtServiceImpl;
 import com.ssafy.edu.member.service.MemberService;
@@ -48,27 +49,19 @@ public class LoginController {
 	public ResponseEntity<Map<String, Object>> login(@RequestBody MemberDto mdto){
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
-		try {
-			MemberDto loginUser = memberService.login(mdto);
-			System.out.println(mdto.toString());
-			if (loginUser != null) { // 유저정보가 있음.
-				System.out.println(1);
-				String accessToken = jwtService.createAccessToken("memberId", loginUser.getMemberId());// key, data
-				String refreshToken = jwtService.createRefreshToken("memberId", loginUser.getMemberId());// key, data
-				// (memberId, refreshtoken)
-				memberService.saveRefreshToken(mdto.getMemberId(), refreshToken);
-				resultMap.put("access-token", accessToken);
-				resultMap.put("refresh-token", refreshToken);
-				resultMap.put("message", SUCCESS);
-				status = HttpStatus.ACCEPTED;
-			}
-			else {
-				resultMap.put("message", FAIL);
-				status = HttpStatus.ACCEPTED;
-			}
-		} catch(Exception e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		MemberDto loginUser = memberService.login(mdto);
+		if (loginUser != null) { // 유저정보가 있음.
+			String accessToken = jwtService.createAccessToken("memberId", loginUser.getMemberId());// key, data
+			String refreshToken = jwtService.createRefreshToken("memberId", loginUser.getMemberId());// key, data
+			memberService.saveRefreshToken(mdto.getMemberId(), refreshToken);
+			resultMap.put("access-token", accessToken);
+			resultMap.put("refresh-token", refreshToken);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		}
+		else { // 해당 유저가 없음.
+			resultMap.put("message", FAIL);
+			status = HttpStatus.ACCEPTED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
@@ -76,20 +69,13 @@ public class LoginController {
 	@GetMapping("/info/{memberId}")
 	public ResponseEntity<Map<String, Object>> getInfo(@PathVariable("memberId") String memberId,
 			HttpServletRequest request) {
-		//Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		if (jwtService.checkToken(request.getHeader("access-token"))) {
-			try {
-//				로그인 사용자 정보.
-				MemberDto memberDto = memberService.memberDetail(memberId);
-				resultMap.put("userInfo", memberDto);
-				resultMap.put("message", SUCCESS);
-				status = HttpStatus.ACCEPTED;
-			} catch (Exception e) {
-				resultMap.put("message", e.getMessage());
-				status = HttpStatus.INTERNAL_SERVER_ERROR;
-			}
+			MemberDto memberDto = memberService.memberDetail(memberId);
+			resultMap.put("userInfo", memberDto);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
 		} else {
 			resultMap.put("message", FAIL);
 			status = HttpStatus.UNAUTHORIZED;
@@ -97,21 +83,19 @@ public class LoginController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
+	// 로그아웃
 	@GetMapping("/logout/{memberId}")
 	public ResponseEntity<?> removeToken(@PathVariable("memberId") String memberId){
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
-		try {
-			memberService.deleRefreshToken(memberId);
-			resultMap.put("message", SUCCESS);
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
+		memberService.deleRefreshToken(memberId);
+		resultMap.put("message", SUCCESS);
+		status = HttpStatus.ACCEPTED;
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
+	
+	// 토큰 갱신
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
 			throws Exception {
@@ -129,17 +113,6 @@ public class LoginController {
 			status = HttpStatus.UNAUTHORIZED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
-	
-//	@GetMapping("/logout")
-//	public String logout(HttpSession session) {
-//		session.invalidate();
-//		return "redirect:/";
-//	}
-	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<String> exceptionHandling(Exception e) {
-		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }
