@@ -1,6 +1,11 @@
 package com.ssafy.edu.member.model.dto;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-public class MemberDto {
+public class MemberDto{
 	private String memberId; // 아이디
 	private String emailId; // 이메일 아이디
 	private String emailDomain; // 이메일 도메인
@@ -25,6 +30,7 @@ public class MemberDto {
 	
 	private char memberRole; // 사용자 역할
 	private char status; // 삭제 상태 
+	
 	
 	
 	public MemberDto(String memberId, String emailId, String emailDomain, String nickname, String password,
@@ -44,5 +50,4 @@ public class MemberDto {
 		this.memberId = memberId;
 		this.password = password;
 	}
-
 }

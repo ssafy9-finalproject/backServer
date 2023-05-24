@@ -40,6 +40,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 		//log.debug("memberId 끌어올수있음:{}", jwtService.getMemberId(token));
 		
 		if (token == null && refreshToken == null) {
+			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
 			throw new UnAuthorizedException();
 		}
 		if (jwtService.checkToken(token)) {
