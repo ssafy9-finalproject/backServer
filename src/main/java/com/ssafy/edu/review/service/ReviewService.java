@@ -41,4 +41,6 @@ public interface ReviewService {
 
 	void registComments(ReviewCommentsRequestDto dto);
 
+	void deleteComments(Long id);
+
 }
