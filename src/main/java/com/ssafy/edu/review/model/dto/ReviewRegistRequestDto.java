@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
 public class ReviewRegistRequestDto {
 	private Long review_id;
 	
-	@NotBlank
 	private String member_id;
-	@NotNull
 	private Long plan_id;
 	@NotBlank(message = "제목을 입력해 주세요")
 	private String title;

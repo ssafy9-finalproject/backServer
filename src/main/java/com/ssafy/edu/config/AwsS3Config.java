@@ -3,6 +3,7 @@ package com.ssafy.edu.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
+@PropertySource("classpath:/amazon.properties")
 public class AwsS3Config {
     @Value("${cloud.aws.credentials.access-key}") // application.properties 에 명시한 내용
     private String accessKey;
