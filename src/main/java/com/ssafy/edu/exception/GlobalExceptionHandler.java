@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(UnAuthorizedException.class)
 	public ResponseEntity<ApiUtils.ApiResult<?>> handleUnAuthorizedException(UnAuthorizedException e){
-		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED); // 401
 	}
 	
 	@ExceptionHandler(TokenExpiredException.class)
@@ -42,6 +42,16 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(TokenInvalidException.class)
 	public ResponseEntity<ApiUtils.ApiResult<?>> handleTokenInvalidException(TokenInvalidException e){
-		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED); // 401
+	}
+	
+	@ExceptionHandler(MemberException.class)
+	public ResponseEntity<ApiUtils.ApiResult<?>> handleMemberException(MemberException e){
+		return errorResponse(e.getMessage(), HttpStatus.NO_CONTENT); // 204
+	}
+	
+	@ExceptionHandler(InternalServerErrorException.class)
+	public ResponseEntity<ApiUtils.ApiResult<?>> handleInternalServerErrorException(InternalServerErrorException e){
+		return errorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // 500
 	}
 }
