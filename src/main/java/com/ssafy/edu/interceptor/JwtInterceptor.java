@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ssafy.edu.exception.ErrorCode;
 import com.ssafy.edu.exception.TokenExpiredException;
+import com.ssafy.edu.exception.TokenInvalidException;
 import com.ssafy.edu.exception.UnAuthorizedException;
 import com.ssafy.edu.member.service.JwtService;
 import com.ssafy.edu.member.service.MemberService;
@@ -37,21 +38,31 @@ public class JwtInterceptor implements HandlerInterceptor {
 		String token = request.getHeader("access-token");
 		String refreshToken = request.getHeader("refresh-token");
 		
+		// 둘다 없음 : un_authorized
 		if (token == null && refreshToken == null) {
 			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
 			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
 		}
-		if (jwtService.checkToken(token)) {
-			return true;
-		} 
-		else if (jwtService.checkToken(refreshToken)) {
-			// 토큰이 존재하지않음
+		// accesstoken 없음 : expired
+		if (token == null && refreshToken != null) {
 			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
-			if (jwtService.checkToken(request.getHeader("access-token"))) {
-				return true;
-			}
+			throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
 		}
-		throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
+		// 둘다 있음, 근데 형식 안맞음
+		if (!jwtService.checkToken(token)) {
+			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
+		} 
+		else { // 둘다있고, 형식 맞음
+			return true;
+		}
+//		else if (jwtService.checkToken(refreshToken)) {
+//			// 토큰이 존재하지않거나 invalid함
+//			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
+//			if (jwtService.checkToken(request.getHeader("access-token"))) {
+//				return true;
+//			}
+//		}
+		
 	}
 
 
