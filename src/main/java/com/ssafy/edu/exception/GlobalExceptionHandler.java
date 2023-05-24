@@ -26,4 +26,31 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiUtils.ApiResult<?>> notFoundException(NotFoundException e) {
 		return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(UnAuthorizedException.class)
+	public ResponseEntity<ErrorResponse> handleUnAuthorizedException(UnAuthorizedException e){
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		.body(ErrorResponse.builder()
+				.errorCode(e.getErrorCode().toString())
+				.message(e.getErrorMessage())
+				.build());
+	}
+	
+	@ExceptionHandler(TokenExpiredException.class)
+	public ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException e){
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ErrorResponse.builder()
+						.errorCode(e.getErrorCode().toString())
+						.message(e.getErrorMessage())
+						.build());
+	}
+	
+	@ExceptionHandler(TokenInvalidException.class)
+	public ResponseEntity<ErrorResponse> handleTokenInvalidException(TokenInvalidException e){
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(ErrorResponse.builder()
+						.errorCode(e.getErrorCode().toString())
+						.message(e.getErrorMessage())
+						.build());
+	}
 }
