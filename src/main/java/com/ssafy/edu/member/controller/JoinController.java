@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.edu.exception.DuplicatedMemberException;
+import com.ssafy.edu.exception.ErrorCode;
+import com.ssafy.edu.exception.MemberException;
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
+import com.ssafy.edu.utils.ApiUtils;
+import com.ssafy.edu.utils.ApiUtils.ApiResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,28 +31,29 @@ public class JoinController {
 	
 	private final MemberService memberService;
 	
-	// 회원가입 : insert
+	// 회원가입 : insert : exclude
 	@PostMapping("/join")
-	public ResponseEntity<?> join(@RequestBody MemberDto mdto) {
+	public ApiResult<MemberDto> join(@RequestBody MemberDto mdto) {
 		memberService.join(mdto);
 		MemberDto responsedto = memberService.memberDetail(mdto.getMemberId());
-		if (responsedto != null) { // 성공
-			return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
+		// 성공
+		if (responsedto != null) {
+			return ApiUtils.success(responsedto);
 		}
-		else {
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-		}
+		
+		throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
 	}
 	
-	// 중복 아이디 체크
+	// 중복 아이디 체크 : include
 	@GetMapping("/check/{memberId}")
-	public ResponseEntity<?> duplicatedIdCheck(@PathVariable("memberId") String memberId){
+	public ApiResult<MemberDto> duplicatedIdCheck(@PathVariable("memberId") String memberId){
+		// 중복 멤버 있나 확인
 		MemberDto responsedto = memberService.memberDetail(memberId);
-		if (responsedto != null) { // 중복있음 : 반환 dto 있음
-			return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
+		// 중복없음
+		if (responsedto == null) {
+			return ApiUtils.success(null);
 		}
-		else { // 반환없음. 가입가능
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-		}
+		// 204 던짐
+		throw new DuplicatedMemberException(ErrorCode.MEMBER_DUPLICATED);
 	}
 }
