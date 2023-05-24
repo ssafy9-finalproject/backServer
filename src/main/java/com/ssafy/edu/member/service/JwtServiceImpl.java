@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.ssafy.edu.exception.ErrorCode;
 import com.ssafy.edu.exception.UnAuthorizedException;
 
 import io.jsonwebtoken.Claims;
@@ -115,7 +116,7 @@ public class JwtServiceImpl implements JwtService {
 			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(accessToken);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			throw new UnAuthorizedException();
+			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
 		}
 		Map<String, Object> value = claims.getBody();
 		String memberId = value.get("memberId").toString();
