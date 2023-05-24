@@ -44,9 +44,9 @@ public class JwtServiceImpl implements JwtService {
 	@Override
 	public <T> String createRefreshToken(String key, T data) {
 		// 7일
-		return create(key, data, "refresh-token", REFRESH_TOKEN_EXPIRE);
+		//return create(key, data, "refresh-token", REFRESH_TOKEN_EXPIRE);
 		// 5초
-		//return create(key, data, "refresh-token", 1000 * 60L);
+		return create(key, data, "refresh-token", 1000 * 60L);
 	}
 
 	//Token 발급
