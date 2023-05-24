@@ -50,6 +50,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 		}
 		// 둘다 있음, 근데 형식 안맞음
 		if (!jwtService.checkToken(token)) {
+			log.info("rignow: {}", ErrorCode.TOKEN_INVALID.getDescription());
 			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
 		} 
 		else { // 둘다있고, 형식 맞음
