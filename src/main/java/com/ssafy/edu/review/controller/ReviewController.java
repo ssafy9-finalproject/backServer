@@ -1,6 +1,7 @@
 package com.ssafy.edu.review.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.edu.exception.NotFoundException;
 import com.ssafy.edu.member.service.JwtService;
-import com.ssafy.edu.member.service.JwtServiceImpl;
 import com.ssafy.edu.review.model.dto.MyPlanResponseDto;
 import com.ssafy.edu.review.model.dto.MyPlanReviewResponseDto;
 import com.ssafy.edu.review.model.dto.ReviewCommentsRequestDto;
@@ -67,7 +68,6 @@ public class ReviewController {
 		if(token == null) {
 			return ApiUtils.success(reviewService.getReview(id,""));
 		}
-		log.debug("getReview token 얻기전: %%%%%%%%%%%%%%%%%%%%%");
 		String memberId = jwtService.getMemberId(token);
 		return ApiUtils.success(reviewService.getReview(id,memberId));
 	}
@@ -104,6 +104,11 @@ public class ReviewController {
 	@PostMapping("/review/comments")
 	public ApiResult<?> reigstComments(@RequestBody ReviewCommentsRequestDto dto) {
 		reviewService.registComments(dto);
+		return ApiUtils.success(null);
+	}
+	@DeleteMapping("/review/comments/{id}")
+	public ApiResult<?> deleteComments(@PathVariable Long id) {
+		reviewService.deleteComments(id);
 		return ApiUtils.success(null);
 	}
 }

@@ -146,7 +146,6 @@ public class ReviewServiceImpl implements ReviewService{
 			reviewMapper.modifyReviewContents(rModel);
 			theDay = theDay.plusDays(1);
 		}
-		
 	}
 	@Override
 	public void updateHit(Long id) {
@@ -166,7 +165,10 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 	@Override
 	public void registComments(ReviewCommentsRequestDto dto) {
-		reviewMapper.registComments(dto);
-		
+		reviewMapper.registComments(dto);	
+	}
+	@Override
+	public void deleteComments(Long id) {
+		reviewMapper.deleteComments(id);
 	}
 }

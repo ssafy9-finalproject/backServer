@@ -48,5 +48,7 @@ public interface ReviewMapper {
 
 	void registComments(ReviewCommentsRequestDto dto);
 
+	void deleteComments(Long id);
+
 
 }
