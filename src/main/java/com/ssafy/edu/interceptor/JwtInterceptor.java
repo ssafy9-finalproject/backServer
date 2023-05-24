@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.ssafy.edu.exception.ErrorCode;
 import com.ssafy.edu.exception.TokenExpiredException;
 import com.ssafy.edu.exception.UnAuthorizedException;
 import com.ssafy.edu.member.service.JwtService;
@@ -35,13 +36,10 @@ public class JwtInterceptor implements HandlerInterceptor {
 		}
 		String token = request.getHeader("access-token");
 		String refreshToken = request.getHeader("refresh-token");
-		//log.debug("엑세스토큰 있음:{}",token);
-		//log.debug("리프레시토큰 있음:{}",refreshToken);
-		//log.debug("memberId 끌어올수있음:{}", jwtService.getMemberId(token));
 		
 		if (token == null && refreshToken == null) {
 			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
-			throw new UnAuthorizedException();
+			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
 		}
 		if (jwtService.checkToken(token)) {
 			return true;
@@ -53,7 +51,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 				return true;
 			}
 		}
-		throw new TokenExpiredException();
+		throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
 	}
 
 
