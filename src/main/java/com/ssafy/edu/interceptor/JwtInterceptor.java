@@ -17,6 +17,10 @@ import com.ssafy.edu.exception.UnAuthorizedException;
 import com.ssafy.edu.member.service.JwtService;
 import com.ssafy.edu.member.service.MemberService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.swagger.models.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,31 +43,29 @@ public class JwtInterceptor implements HandlerInterceptor {
 		String refreshToken = request.getHeader("refresh-token");
 		
 		// 둘다 없음 : un_authorized
-		if (token == null && refreshToken == null) {
-			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
+		if (token == null || refreshToken == null) {
 			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
 		}
-		// accesstoken 없음 : expired
-		if (token == null && refreshToken != null) {
-			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
+		//refreshToken 먼저 체크
+		try {
+			jwtService.checkToken(refreshToken);
+		} catch(Exception e) {
+			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
+		}
+		
+		try {
+			jwtService.checkToken(token);
+		} catch(MalformedJwtException | UnsupportedJwtException | SignatureException e) {
+			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
+		} catch(ExpiredJwtException e) {
+			//여기서 새로 accesstoken 발급해주기.
+//			jwtService.createAccessToken("memberId", data)
+//			response.setHeader("access-token", value);
 			throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
 		}
-		// 둘다 있음, 근데 형식 안맞음
-		if (!jwtService.checkToken(token)) {
-			log.info("rignow: {}", ErrorCode.TOKEN_INVALID.getDescription());
-			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
-		} 
-		else { // 둘다있고, 형식 맞음
-			return true;
-		}
-//		else if (jwtService.checkToken(refreshToken)) {
-//			// 토큰이 존재하지않거나 invalid함
-//			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
-//			if (jwtService.checkToken(request.getHeader("access-token"))) {
-//				return true;
-//			}
-//		}
+		 
 		
+		return true;
 	}
 
 

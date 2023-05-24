@@ -3,7 +3,6 @@ package com.ssafy.edu.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -38,13 +37,11 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(TokenExpiredException.class)
 	public ResponseEntity<ApiUtils.ApiResult<?>> handleTokenExpiredException(TokenExpiredException e){
-		log.debug("check is controller advice work");
-		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+		return errorResponse(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 	}
 	
 	@ExceptionHandler(TokenInvalidException.class)
 	public ResponseEntity<ApiUtils.ApiResult<?>> handleTokenInvalidException(TokenInvalidException e){
-		log.debug("check is controller advice work2");
 		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
 	}
 }
