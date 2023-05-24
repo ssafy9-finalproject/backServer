@@ -6,10 +6,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+<<<<<<< HEAD
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+=======
+>>>>>>> 70fdfe84bfb19f3243c1925c1b181b8a5fc67085
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +24,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
+<<<<<<< HEAD
 public class MemberDto implements UserDetails{
+=======
+public class MemberDto{
+>>>>>>> 70fdfe84bfb19f3243c1925c1b181b8a5fc67085
 	private String memberId; // 아이디
 	private String emailId; // 이메일 아이디
 	private String emailDomain; // 이메일 도메인
@@ -54,6 +61,7 @@ public class MemberDto implements UserDetails{
 		this.memberId = memberId;
 		this.password = password;
 	}
+<<<<<<< HEAD
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -92,4 +100,6 @@ public class MemberDto implements UserDetails{
 		return true;
 	}
 
+=======
+>>>>>>> 70fdfe84bfb19f3243c1925c1b181b8a5fc67085
 }

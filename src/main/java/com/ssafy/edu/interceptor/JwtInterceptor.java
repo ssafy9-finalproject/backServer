@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.ssafy.edu.exception.ErrorCode;
 import com.ssafy.edu.exception.TokenExpiredException;
+import com.ssafy.edu.exception.TokenInvalidException;
 import com.ssafy.edu.exception.UnAuthorizedException;
 import com.ssafy.edu.member.service.JwtService;
 import com.ssafy.edu.member.service.MemberService;
@@ -30,6 +32,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+<<<<<<< HEAD
 //		if (isPreflightRequest(request)) {
 //			return true;
 //		}
@@ -47,13 +50,45 @@ public class JwtInterceptor implements HandlerInterceptor {
 //		} 
 //		else if (jwtService.checkToken(refreshToken)) {
 //			// 토큰이 존재하지않음
+=======
+		if (isPreflightRequest(request)) {
+			return true;
+		}
+		String token = request.getHeader("access-token");
+		String refreshToken = request.getHeader("refresh-token");
+		
+		// 둘다 없음 : un_authorized
+		if (token == null && refreshToken == null) {
+			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
+			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
+		}
+		// accesstoken 없음 : expired
+		if (token == null && refreshToken != null) {
+			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
+			throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
+		}
+		// 둘다 있음, 근데 형식 안맞음
+		if (!jwtService.checkToken(token)) {
+			log.info("rignow: {}", ErrorCode.TOKEN_INVALID.getDescription());
+			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
+		} 
+		else { // 둘다있고, 형식 맞음
+			return true;
+		}
+//		else if (jwtService.checkToken(refreshToken)) {
+//			// 토큰이 존재하지않거나 invalid함
+>>>>>>> 70fdfe84bfb19f3243c1925c1b181b8a5fc67085
 //			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
 //			if (jwtService.checkToken(request.getHeader("access-token"))) {
 //				return true;
 //			}
 //		}
+<<<<<<< HEAD
 //		throw new TokenExpiredException();
 		return true;
+=======
+		
+>>>>>>> 70fdfe84bfb19f3243c1925c1b181b8a5fc67085
 	}
 
 

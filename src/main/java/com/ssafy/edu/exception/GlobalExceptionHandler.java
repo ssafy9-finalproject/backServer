@@ -8,9 +8,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ssafy.edu.utils.ApiUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
 import static com.ssafy.edu.utils.ApiUtils.error;
 
 // 모든 예외를 한곳에서 처리
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
@@ -25,5 +29,22 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ApiUtils.ApiResult<?>> notFoundException(NotFoundException e) {
 		return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(UnAuthorizedException.class)
+	public ResponseEntity<ApiUtils.ApiResult<?>> handleUnAuthorizedException(UnAuthorizedException e){
+		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(TokenExpiredException.class)
+	public ResponseEntity<ApiUtils.ApiResult<?>> handleTokenExpiredException(TokenExpiredException e){
+		log.debug("check is controller advice work");
+		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(TokenInvalidException.class)
+	public ResponseEntity<ApiUtils.ApiResult<?>> handleTokenInvalidException(TokenInvalidException e){
+		log.debug("check is controller advice work2");
+		return errorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
 	}
 }
