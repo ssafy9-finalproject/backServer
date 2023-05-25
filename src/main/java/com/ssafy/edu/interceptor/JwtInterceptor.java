@@ -64,8 +64,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 			response.setHeader("access-token", newToken);
 			throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
 		}
-		 
-		
 		return true;
 	}
 
