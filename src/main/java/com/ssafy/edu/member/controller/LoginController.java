@@ -4,26 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.edu.exception.ErrorCode;
-import com.ssafy.edu.exception.InternalServerErrorException;
 import com.ssafy.edu.exception.MemberException;
-import com.ssafy.edu.exception.NotFoundException;
 import com.ssafy.edu.exception.TokenInvalidException;
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.JwtServiceImpl;
@@ -33,7 +24,6 @@ import com.ssafy.edu.utils.ApiUtils.ApiResult;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -51,7 +41,6 @@ public class LoginController {
 	@PostMapping("/login")
 	public ApiResult<Map<String, Object>> login(@RequestBody MemberDto mdto){
 		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = null;
 		MemberDto loginUser = memberService.login(mdto);
 		if (loginUser != null) { // 유저정보가 있음.
 			String accessToken = jwtService.createAccessToken("memberId", loginUser.getMemberId());// key, data
@@ -61,11 +50,9 @@ public class LoginController {
 			resultMap.put("refresh-token", refreshToken);
 			return ApiUtils.success(resultMap);
 		}
-		if (loginUser == null) { // 해당 유저가 없음.
+		else { // 해당 유저가 없음.
 			throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
 		}
-		// loginUser외 서버 에러 가능성
-		throw new InternalServerErrorException(ErrorCode.INTERNAL_SERVER_ERROR);
 	}
 	
 	// include
@@ -79,7 +66,7 @@ public class LoginController {
 	
 	// 로그아웃 : exclude
 	@GetMapping("/logout/{memberId}")
-	public ApiResult<?> removeToken(@PathVariable("memberId") String memberId){
+	public ApiResult<?> removeToken(@PathVariable("memberId") String memberId) {
 		memberService.deleRefreshToken(memberId);
 		return ApiUtils.success(null);
 	}
@@ -87,10 +74,8 @@ public class LoginController {
 	
 	// 토큰 갱신 : include
 	@PostMapping("/refresh")
-	public ApiResult<Map<String, Object>> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
-			throws Exception {
+	public ApiResult<Map<String, Object>> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request) {
 		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.ACCEPTED;
 		String token = request.getHeader("refresh-token");
 		// 리프레시 토큰이 일치
 		if (token.equals(memberService.getRefreshToken(memberDto.getMemberId()))) {
@@ -99,6 +84,6 @@ public class LoginController {
 			resultMap.put("access-token", accessToken);
 			return ApiUtils.success(resultMap);
 		}
-		throw new InternalServerErrorException(ErrorCode.INTERNAL_SERVER_ERROR);
+		throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
 	}
 }
