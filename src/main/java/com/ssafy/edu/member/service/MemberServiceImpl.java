@@ -18,47 +18,47 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberMapper memberMapper;
 
 	@Override
-	public void join(MemberDto mdto) throws Exception {
+	public void join(MemberDto mdto) {
 		memberMapper.join(mdto);
 	}
 
 	@Override
-	public MemberDto login(MemberDto mdto) throws Exception {
+	public MemberDto login(MemberDto mdto) {
 		return memberMapper.login(mdto);
 	}
 
 	@Override
-	public List<MemberDto> memberlist() throws Exception {
+	public List<MemberDto> memberlist() {
 		return memberMapper.memberlist();
 	}
 
 	@Override
-	public MemberDto memberDetail(String memberId) throws Exception {
+	public MemberDto memberDetail(String memberId) {
 		return memberMapper.memberDetail(memberId);
 	}
 
 	@Override
-	public void memberDelete(String memberId) throws Exception {
+	public void memberDelete(String memberId) {
 		memberMapper.memberDelete(memberId);
 	}
 
 	@Override
-	public void memberUpdate(MemberDto mdto) throws Exception {
+	public void memberUpdate(MemberDto mdto) {
 		memberMapper.memberUpdate(mdto);
 	}
 
 	@Override
-	public String findById(String memberId) throws Exception {
+	public String findById(String memberId) {
 		return memberMapper.findById(memberId);
 	}
 
 	@Override
-	public MemberDto loginMember(String memberId, String memberPassword) throws Exception {
+	public MemberDto loginMember(String memberId, String memberPassword) {
 		return memberMapper.loginMember(memberId, memberPassword);
 	}
 
 	@Override
-	public void saveRefreshToken(String memberId, String refreshToken) throws Exception {
+	public void saveRefreshToken(String memberId, String refreshToken) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("memberId", memberId);
 		map.put("refreshToken", refreshToken);
@@ -66,12 +66,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Object getRefreshToken(String memberId) throws Exception {
+	public Object getRefreshToken(String memberId) {
 		return memberMapper.getRefreshToken(memberId);
 	}
 
 	@Override
-	public void deleRefreshToken(String memberId) throws Exception {
+	public void deleRefreshToken(String memberId) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("memberId", memberId);
 		map.put("refreshToken", null);

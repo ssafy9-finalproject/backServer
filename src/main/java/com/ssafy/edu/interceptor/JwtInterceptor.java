@@ -12,10 +12,15 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ssafy.edu.exception.ErrorCode;
 import com.ssafy.edu.exception.TokenExpiredException;
+import com.ssafy.edu.exception.TokenInvalidException;
 import com.ssafy.edu.exception.UnAuthorizedException;
 import com.ssafy.edu.member.service.JwtService;
 import com.ssafy.edu.member.service.MemberService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.swagger.models.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtInterceptor implements HandlerInterceptor {
 	
 	private final JwtService jwtService;
-	private final MemberService memberService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -37,21 +41,32 @@ public class JwtInterceptor implements HandlerInterceptor {
 		String token = request.getHeader("access-token");
 		String refreshToken = request.getHeader("refresh-token");
 		
-		if (token == null && refreshToken == null) {
-			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
+		// 둘다 없음 : un_authorized
+		if (token == null || refreshToken == null) {
 			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
 		}
-		if (jwtService.checkToken(token)) {
-			return true;
-		} 
-		else if (jwtService.checkToken(refreshToken)) {
-			// 토큰이 존재하지않음
-			jwtService.createAccessToken("memberId", jwtService.getMemberId(refreshToken));
-			if (jwtService.checkToken(request.getHeader("access-token"))) {
-				return true;
-			}
+		//refreshToken 먼저 체크
+		try {
+			jwtService.checkToken(refreshToken);
+		} catch(Exception e) {
+			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
 		}
-		throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
+		
+		try {
+			jwtService.checkToken(token);
+		} catch(MalformedJwtException | UnsupportedJwtException | SignatureException e) {
+			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
+		} catch(ExpiredJwtException e) {
+			//여기서 새로 accesstoken 발급해주기.
+			String memberId = jwtService.getMemberId(refreshToken);
+			String newToken = jwtService.createAccessToken("memberId", memberId);
+			response.setHeader("Access-Control-Expose-Headers", "access-token");
+			response.setHeader("access-token", newToken);
+			throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
+		}
+		 
+		
+		return true;
 	}
 
 

@@ -36,9 +36,9 @@ public class JwtServiceImpl implements JwtService {
 	@Override
 	public <T> String createAccessToken(String key, T data) {
 		// 10분
-		//return create(key, data, "access-token", ACCESS_TOKEN_EXPIRE);
+		return create(key, data, "access-token", ACCESS_TOKEN_EXPIRE);
 		// 5초
-		return create(key, data, "access-token", 1000 * 60L);
+		//return create(key, data, "access-token", 1000 * 60L);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class JwtServiceImpl implements JwtService {
 		// 7일
 		return create(key, data, "refresh-token", REFRESH_TOKEN_EXPIRE);
 		// 5초
-		//return create(key, data, "refresh-token", 1000 * 60L);
+		//return create(key, data, "refresh-token", REFRESH_TOKEN_EXPIRE);
 	}
 
 	//Token 발급
@@ -98,13 +98,8 @@ public class JwtServiceImpl implements JwtService {
 
 	@Override
 	public boolean checkToken(String jwt) {
-		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-			return true;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return false;
-		}
+		Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
+		return true;
 	}
 	
 	
@@ -116,7 +111,6 @@ public class JwtServiceImpl implements JwtService {
 			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(accessToken);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			throw new UnAuthorizedException(ErrorCode.UN_AUTHORIZED);
 		}
 		Map<String, Object> value = claims.getBody();
 		String memberId = value.get("memberId").toString();

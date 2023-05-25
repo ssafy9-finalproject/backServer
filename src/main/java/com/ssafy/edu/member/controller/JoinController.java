@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.edu.exception.DuplicatedMemberException;
+import com.ssafy.edu.exception.ErrorCode;
+import com.ssafy.edu.exception.MemberException;
 import com.ssafy.edu.member.model.dto.MemberDto;
 import com.ssafy.edu.member.service.MemberService;
+import com.ssafy.edu.utils.ApiUtils;
+import com.ssafy.edu.utils.ApiUtils.ApiResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,42 +31,29 @@ public class JoinController {
 	
 	private final MemberService memberService;
 	
-	// 회원가입 : insert
+	// 회원가입 : insert : exclude
 	@PostMapping("/join")
-	public ResponseEntity<?> join(@RequestBody MemberDto mdto) {
-		try {
-			memberService.join(mdto);
-			// join후 유저정보 찾기
-			MemberDto responsedto = memberService.memberDetail(mdto.getMemberId());
-			// 잘 등록되면 : messagedto 반환
-			if (responsedto != null) { // 성공
-				return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
-			}
-			else { // 이거 프론트단에서 응답코드 처리해야하는지 아직 모르겠음.
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch(Exception e) {
-			return exceptionHandling(e);
-		}
-	}
-	
-	@GetMapping("/check/{memberId}")
-	public ResponseEntity<?> duplicatedIdCheck(@PathVariable("memberId") String memberId){
-		try {
-			MemberDto responsedto = memberService.memberDetail(memberId);
-			if (responsedto != null) { // 중복있음 : 반환 dto 있음
-				return new ResponseEntity<MemberDto>(responsedto, HttpStatus.OK);
-			}
-			else { // 반환없음. 가입가능
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
+	public ApiResult<MemberDto> join(@RequestBody MemberDto mdto) {
+		memberService.join(mdto);
+		MemberDto responsedto = memberService.memberDetail(mdto.getMemberId());
+		// 성공
+		if (responsedto != null) {
+			return ApiUtils.success(responsedto);
 		}
 		
+		throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
 	}
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<String> exceptionHandling(Exception e) {
-		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	
+	// 중복 아이디 체크 : include
+	@GetMapping("/check/{memberId}")
+	public ApiResult<MemberDto> duplicatedIdCheck(@PathVariable("memberId") String memberId){
+		// 중복 멤버 있나 확인
+		MemberDto responsedto = memberService.memberDetail(memberId);
+		// 중복없음
+		if (responsedto == null) {
+			return ApiUtils.success(null);
+		}
+		// 204 던짐
+		throw new DuplicatedMemberException(ErrorCode.MEMBER_DUPLICATED);
 	}
 }

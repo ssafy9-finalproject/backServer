@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 public class ApiUtils {
 
   public static <T> ApiResult<T> success(T response) {
+	  // success, response, error: null
     return new ApiResult<>(true, response, null);
   }
 
