@@ -79,16 +79,15 @@ public class MemberController {
 	public ResponseEntity<?> memberupdate(@RequestBody MemberDto memberDto
 			, HttpServletRequest request){
 		String token = request.getHeader("access-token");
-		// id가 관리자일때
 		String id = jwtService.getMemberId(token);
-		if (id.equals("admin")) {
-			
-				memberService.memberUpdate(memberDto);
-				MemberDto updateResponseDto = memberService.memberDetail(memberDto.getMemberId());
-				if (updateResponseDto != null) { // 업데이트된 dto리턴
-					return new ResponseEntity<MemberDto> (updateResponseDto,HttpStatus.OK);
-				}
-			
+		// id랑 memberId랑 일치할때
+		if (id.equals(memberDto.getMemberId())) {
+			// 업데이트
+			memberService.memberUpdate(memberDto);
+			MemberDto updateResponseDto = memberService.memberDetail(memberDto.getMemberId());
+			if (updateResponseDto != null) { // 업데이트된 dto리턴
+				return new ResponseEntity<MemberDto> (updateResponseDto,HttpStatus.OK);
+			}
 		}
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
