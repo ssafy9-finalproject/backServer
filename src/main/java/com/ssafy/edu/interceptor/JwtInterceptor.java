@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtInterceptor implements HandlerInterceptor {
 	
 	private final JwtService jwtService;
-	private final MemberService memberService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -59,8 +58,10 @@ public class JwtInterceptor implements HandlerInterceptor {
 			throw new TokenInvalidException(ErrorCode.TOKEN_INVALID);
 		} catch(ExpiredJwtException e) {
 			//여기서 새로 accesstoken 발급해주기.
-//			jwtService.createAccessToken("memberId", data)
-//			response.setHeader("access-token", value);
+			String memberId = jwtService.getMemberId(refreshToken);
+			String newToken = jwtService.createAccessToken("memberId", memberId);
+			response.setHeader("Access-Control-Expose-Headers", "access-token");
+			response.setHeader("access-token", newToken);
 			throw new TokenExpiredException(ErrorCode.TOKEN_EXPIRED);
 		}
 		 
